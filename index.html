@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>Happy Birthday Ayushi 🌹</title>
+
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+
+<!-- External Modular Stylesheet -->
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<!-- Compact Floating Sound Button -->
+<!-- <button class="music-toggle-btn playing" id="musicToggleBtn" onclick="toggleSukoonMusic(false, event)" title="Sound: ON / OFF" aria-label="Toggle Sound">
+  <span id="musicIcon">🎵</span>
+</button> -->
+
+<!-- Magical Birthday Surprise Intro Curtain -->
+<div class="gift-intro-overlay" id="giftIntro" onclick="openBirthdaySurprise()">
+  <div class="gift-intro-card">
+    <span class="gift-intro-icon">🎁</span>
+    <div class="gift-intro-tag">✨ Birthday Gift For ✨</div>
+    <h2 class="gift-intro-title">
+      <span class="gift-intro-name">Ayushi Didi <span class="real-rose-flower" style="font-size:0.8em;">🌹</span></span>
+    </h2>
+    <p style="color: var(--text-muted); font-size: 0.88rem; margin-top: 4px;">A soothing musical surprise is waiting inside...</p>
+    <button class="gift-intro-btn" onclick="openBirthdaySurprise(event)">
+      <span>🎁 Tap To Open Surprise!</span>
+    </button>
+  </div>
+</div>
+
+<!-- Canvases (Background Stars, Fireworks & Balloons) -->
+<canvas id="stars-canvas"></canvas>
+<canvas id="fw-canvas"></canvas>
+<div class="balloons-container" id="balloons"></div>
+<div class="petals-container" id="petals"></div>
+
+<!-- Lightbox Modal -->
+<div class="lightbox-modal" id="lightbox" onclick="closeLightbox(event)">
+  <div class="lightbox-inner">
+    <button class="lightbox-close" onclick="forceCloseLightbox()" aria-label="Close">&#10005;</button>
+    <img id="lightbox-img" src="" alt="Enlarged Memory"/>
+    <div class="lightbox-caption" id="lightbox-cap"></div>
+  </div>
+</div>
+
+<div class="page-wrap">
+
+  <!-- ════════ HERO ════════ -->
+  <section class="hero">
+    <div class="hero-glow"></div>
+    <div class="hero-badge">✨ Royal Birthday Celebration ✨</div>
+    <h2 class="hero-title">Happy Birthday</h2>
+    <div class="hero-name-wrap">
+      <span class="hero-crown">👑</span>
+      <h1 class="hero-name">
+        <span class="hero-star">✦</span> Ayushi <span class="hero-star">✦</span>
+      </h1>
+    </div>
+    <p class="hero-subtitle">Duniya ki sabse pyaari aur best Didi <span class="real-rose-flower" style="font-size:1.1em;">🌹</span></p>
+    <div class="cake-box">
+      <span class="cake-sparkle left">✨</span>
+      <span class="cake-icon">🎂</span>
+      <span class="cake-sparkle right">✨</span>
+    </div>
+    <div class="typewriter-box">
+      <span class="tw-icon">💌</span>
+      <span id="typewriter"></span>
+    </div>
+
+    <div class="scroll-indicator">
+      <span>Scroll Down</span>
+      <div class="scroll-arrow"></div>
+    </div>
+  </section>
+
+  <!-- ════════ LETTER ════════ -->
+  <section>
+    <div class="sec-header reveal-item">
+      <!-- <span class="sec-pill">Dil Se 💌</span> -->
+      <h2 class="sec-title">Aapke Liye Ek Khat</h2>
+      <p class="sec-subtitle">Dil ki geheraiyoon se — with all the love 💖</p>
+    </div>
+
+    <div class="letter-wrapper">
+      <div class="letter-box reveal-item">
+        <span class="letter-rose-top">🌹</span>
+        <span class="letter-rose-bottom">🌹</span>
+        <div class="quote-icon">"</div>
+        <div class="letter-content">
+          <p>
+            Meri pyaari <strong>Ayushi Didi</strong>,
+          </p>
+          <p>
+            Aaj aapke is super special din par, I want you to know how <strong>incredibly blessed</strong> I feel
+            to have you as my sister. Aap sirf meri sister nahi ho — aap meri
+            <em>guiding light, meri smile ki wajah, aur meri sabse badi strength</em> ho.
+          </p>
+          <p>
+            Late-night ki baatein, hamari silly ladaiyaan, saath mein ki hui masti aur
+            ek doosre ko support karna — aapke saath bitaya hua har ek pal
+            mere dil ke <strong>bohot zyada kareeb</strong> hai. You bring so much
+            <strong>warmth, khushiyan aur positive energy</strong> into our lives.
+          </p>
+          <p>
+            Dil se yahi dua hai ki aapko zindagi ki har khushi mile,
+            <strong>unlimited success aur radiant health</strong> mile,
+            aur aapke saare dreams poore ho jayein. You truly deserve the absolute best! 🌟
+          </p>
+          <p>
+            <em>Happy Birthday, Ayushi Didi! Love you so very much, hamesha! 👑❤️</em>
+          </p>
+        </div>
+        <div class="letter-signature">— Your loving sibling ❤️</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════ PHOTOS ════════ -->
+  <section>
+    <div class="sec-header reveal-item">
+      <span class="sec-pill">Pyaari Yaadein 📸</span>
+      <h2 class="sec-title">Our Beautiful Memories</h2>
+      <p class="sec-subtitle">Har photo ek khaas pal ki yaad hai — tap karke full size dekho ✨</p>
+    </div>
+
+    <div class="gallery-grid">
+      <!-- Photo 1 -->
+      <div class="photo-card reveal-item" onclick="openLightbox(this)" data-caption="🌸 Kitni khoobsurat ho aap — glowing like always!">
+        <span class="photo-tag">Queen 👑</span>
+        <img src="assets/ChatGPT Image Aug 30, 2026, 08_00_48 PM.png" alt="Ayushi beautiful" loading="lazy"/>
+        <div class="photo-overlay"></div>
+        <div class="photo-caption">
+          <span class="photo-text">Always glowing! 🌸</span>
+          <span class="photo-badge">✨</span>
+        </div>
+      </div>
+
+      <!-- Photo 2 -->
+      <div class="photo-card reveal-item" onclick="openLightbox(this)" data-caption="🎉 Dil se khushi aur memories — hamesha yaad rahega!">
+        <span class="photo-tag">Memory 🎊</span>
+        <img src="assets/IMG_20251227_174839319.jpg" alt="Happy memory" loading="lazy"/>
+        <div class="photo-overlay"></div>
+        <div class="photo-caption">
+          <span class="photo-text">Yaadgaar pal! 🎉</span>
+          <span class="photo-badge">🎊</span>
+        </div>
+      </div>
+
+      <!-- Photo 3 -->
+      <div class="photo-card reveal-item" onclick="openLightbox(this)" data-caption="💫 Aapki smile poori duniya roshan kar deti hai!">
+        <span class="photo-tag">Radiance 🌟</span>
+        <img src="assets/IMG_20251227_175255172.jpg" alt="Radiant smile" loading="lazy"/>
+        <div class="photo-overlay"></div>
+        <div class="photo-caption">
+          <span class="photo-text">Chamakti hui smile! 💫</span>
+          <span class="photo-badge">🌟</span>
+        </div>
+      </div>
+
+      <!-- Photo 4 -->
+      <div class="photo-card reveal-item" onclick="openLightbox(this)" data-caption="🥳 New Year ka celebration — full masti mode on!">
+        <span class="photo-tag">Celebration 🥳</span>
+        <img src="assets/IMG_20251231_213820971.jpg" alt="New Year celebration" loading="lazy"/>
+        <div class="photo-overlay"></div>
+        <div class="photo-caption">
+          <span class="photo-text">New Year ki masti! 🥳</span>
+          <span class="photo-badge">🎆</span>
+        </div>
+      </div>
+
+      <!-- Photo 5 -->
+      <div class="photo-card reveal-item" onclick="openLightbox(this)" data-caption="💃 Aap jahan bhi jao, style aur grace saath hota hai!">
+        <span class="photo-tag">Style 💃</span>
+        <img src="assets/IMG_20260115_143110729.jpg" alt="Stylish Ayushi" loading="lazy"/>
+        <div class="photo-overlay"></div>
+        <div class="photo-caption">
+          <span class="photo-text">Full style mode! 💃</span>
+          <span class="photo-badge">👗</span>
+        </div>
+      </div>
+
+      <!-- Photo 6 -->
+      <div class="photo-card reveal-item" onclick="openLightbox(this)" data-caption="🌺 Zindagi mein aise khubsurat pal aate rahein!">
+        <span class="photo-tag">Vibes ✨</span>
+        <img src="assets/IMG_20260228_133639961.jpg" alt="Beautiful vibes" loading="lazy"/>
+        <div class="photo-overlay"></div>
+        <div class="photo-caption">
+          <span class="photo-text">Khoobsurat lamhe! 🌺</span>
+          <span class="photo-badge">🌸</span>
+        </div>
+      </div>
+
+      <!-- Photo 7 -->
+      <div class="photo-card reveal-item" onclick="openLightbox(this)" data-caption="🌙 Raat ki chamak bhi aapke jaisi nahi — you are priceless!">
+        <span class="photo-tag">Precious 💖</span>
+        <img src="assets/IMG_20260228_213020505.jpg" alt="Precious moments" loading="lazy"/>
+        <div class="photo-overlay"></div>
+        <div class="photo-caption">
+          <span class="photo-text">Anmol pal! 💖</span>
+          <span class="photo-badge">🌙</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════ WISHES ════════ -->
+  <section>
+    <div class="sec-header reveal-item">
+      <span class="sec-pill">Dil Se Duaayein 💖</span>
+      <h2 class="sec-title">Special Wishes For You</h2>
+      <p class="sec-subtitle">Aapke saare sapne sach ho jayein 🌸</p>
+    </div>
+
+    <div class="wishes-grid">
+      <div class="wish-card reveal-item">
+        <span class="card-rose-garnish">🌹</span>
+        <div class="wish-card-header">
+          <div class="wish-icon-badge"><span class="wish-card-icon">💖</span></div>
+        </div>
+        <h3 class="wish-card-title">Endless Pyaar</h3>
+        <p class="wish-card-desc">Aapko hamesha itna pyaar, warmth aur respect mile jitna aap deserve karti ho.</p>
+      </div>
+
+      <div class="wish-card reveal-item">
+        <span class="card-rose-garnish">🌸</span>
+        <div class="wish-card-header">
+          <div class="wish-icon-badge"><span class="wish-card-icon">🚀</span></div>
+        </div>
+        <h3 class="wish-card-title">Badi Success</h3>
+        <p class="wish-card-desc">Aap jo bhi dream dekho, wo reality bane aur success hamesha aapke kadam choome.</p>
+      </div>
+
+      <div class="wish-card reveal-item">
+        <span class="card-rose-garnish">🌼</span>
+        <div class="wish-card-header">
+          <div class="wish-icon-badge"><span class="wish-card-icon">😂</span></div>
+        </div>
+        <h3 class="wish-card-title">Pure Khushiyan</h3>
+        <p class="wish-card-desc">Har naya din aapke chehre par aisi muskaan aur sweet laughter laye jo kabhi kam na ho.</p>
+      </div>
+
+      <div class="wish-card reveal-item">
+        <span class="card-rose-garnish">🌺</span>
+        <div class="wish-card-header">
+          <div class="wish-icon-badge"><span class="wish-card-icon">🌺</span></div>
+        </div>
+        <h3 class="wish-card-title">Fit &amp; Healthy</h3>
+        <p class="wish-card-desc">Aap hamesha fit, glowing, energetic aur healthy raho, har subah nayi taazgi ke saath.</p>
+      </div>
+
+      <div class="wish-card reveal-item">
+        <span class="card-rose-garnish">🌷</span>
+        <div class="wish-card-header">
+          <div class="wish-icon-badge"><span class="wish-card-icon">✈️</span></div>
+        </div>
+        <h3 class="wish-card-title">Nayi Manzilein</h3>
+        <p class="wish-card-desc">Life aapko nayi khoobsurat jagahon aur exciting adventures par le jaye.</p>
+      </div>
+
+      <div class="wish-card reveal-item">
+        <span class="card-rose-garnish">🪷</span>
+        <div class="wish-card-header">
+          <div class="wish-icon-badge"><span class="wish-card-icon">🌙</span></div>
+        </div>
+        <h3 class="wish-card-title">Dil Ka Sukoon</h3>
+        <p class="wish-card-desc">Aapke dil aur dimag ko hamesha shanti, sukoon aur happiness mile.</p>
+      </div>
+
+      <div class="wish-card reveal-item">
+        <span class="card-rose-garnish">🌻</span>
+        <div class="wish-card-header">
+          <div class="wish-icon-badge"><span class="wish-card-icon">👑</span></div>
+        </div>
+        <h3 class="wish-card-title">Pure Confidence</h3>
+        <p class="wish-card-desc">Hamesha confident rehna, because you are truly capable aur extraordinary!</p>
+      </div>
+
+      <div class="wish-card reveal-item">
+        <span class="card-rose-garnish">🌹</span>
+        <div class="wish-card-header">
+          <div class="wish-icon-badge"><span class="wish-card-icon">🌹</span></div>
+        </div>
+        <h3 class="wish-card-title">Mehakti Life</h3>
+        <p class="wish-card-desc">Aapki life ek khoobsurat garden ki tarah hamesha khilti aur mehakti rahe.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════ REASONS ════════ -->
+  <section>
+    <div class="sec-header reveal-item">
+      <span class="sec-pill">Aap Itni Special Kyun Ho ✨</span>
+      <h2 class="sec-title">What Makes You The Best</h2>
+      <p class="sec-subtitle">Kuch pyaari baatein jo aapko sabse alag banati hain 💖</p>
+    </div>
+
+    <div class="reasons-box">
+      <div class="reason-item reveal-item">
+        <span class="card-rose-garnish">🌸</span>
+        <div class="reason-icon-wrap">🌟</div>
+        <div class="reason-body">
+          <h4>Aap har jagah khushiyan bikher deti ho</h4>
+          <p>Aapki positive energy aur warm smile se poora ghar aur mahol khushnuma ho jata hai.</p>
+        </div>
+      </div>
+
+      <div class="reason-item reveal-item">
+        <span class="card-rose-garnish">🌺</span>
+        <div class="reason-icon-wrap">💪</div>
+        <div class="reason-body">
+          <h4>Aap bohot strong aur brave ho</h4>
+          <p>Aap har challenge ko itne patience aur courage ke saath face karti ho — always inspiring us.</p>
+        </div>
+      </div>
+
+      <div class="reason-item reveal-item">
+        <span class="card-rose-garnish">🌻</span>
+        <div class="reason-icon-wrap">🎓</div>
+        <div class="reason-body">
+          <h4>Aapka dedication &amp; hard work</h4>
+          <p>Aap jo bhi kaam karti ho, poore focus aur mehnat se karti ho — we are so proud of you!</p>
+        </div>
+      </div>
+
+      <div class="reason-item reveal-item">
+        <span class="card-rose-garnish">🌷</span>
+        <div class="reason-icon-wrap">🤗</div>
+        <div class="reason-body">
+          <h4>Aapka dil sach mein pure gold hai</h4>
+          <p>Aap sabki bina kisi selfish motive ke care karti ho. Having you as sister is a pure blessing.</p>
+        </div>
+      </div>
+
+      <div class="reason-item reveal-item">
+        <span class="card-rose-garnish">🌹</span>
+        <div class="reason-icon-wrap">😂</div>
+        <div class="reason-body">
+          <h4>Best companion for masti &amp; talks</h4>
+          <p>Silly jokes ho ya deep conversations, aapke saath har pal memorable aur fun ban jata hai.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════ FINAL CELEBRATION ════════ -->
+  <section class="final-celebration" onclick="triggerFireworks()">
+    <div class="final-card-container reveal-item">
+      <div class="final-glow"></div>
+      <div class="final-badge">✨ Royal Birthday Finale ✨</div>
+      <p class="final-pre">Aapka din bohot magical aur khoobsurat ho ✨</p>
+      <h2 class="final-hbd">Happy Birthday,</h2>
+      <div class="final-name-wrap">
+        <span class="final-crown">👑</span>
+        <h1 class="final-ayushi">
+          <span class="hero-star">✦</span> <span class="gradient-text">Ayushi Didi!</span> <span class="hero-star">✦</span>
+        </h1>
+      </div>
+      <div class="final-note-box">
+        <p class="final-note">💖 Ye saal aapki zindagi ka sabse happiest aur most successful saal ho! 🌟</p>
+      </div>
+      <button class="cracker-btn" onclick="triggerFireworks(event)">
+        <span class="btn-icon">🎆</span>
+        <span>Tap Karke Fireworks Chalao!</span>
+        <span class="btn-sparkle">✨</span>
+      </button>
+      <div class="emoji-ribbon">
+        <span>🎂</span><span>🎉</span><span>🎈</span><span>🥳</span><span>🎁</span><span>🌹</span><span>👑</span><span>✨</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════ FOOTER ════════ -->
+  <footer>
+    Made with <span>❤️</span> for <span>Ayushi Didi</span> · Yaadgaar Birthday Celebration · 2026
+  </footer>
+
+</div>
+
+<!-- External Modular JavaScript -->
+<script src="script.js"></script>
+</body>
+</html>
