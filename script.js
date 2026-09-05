@@ -10,6 +10,7 @@ let audioCtx = null;
 let isMusicPlaying = false;
 let musicTimer = null;
 let noteIndex = 0;
+let lastCrackerSoundAt = -Infinity;
 
 // Musical Note Frequencies in Hz
 const N = {
@@ -58,7 +59,7 @@ function updateMusicToggleUI() {
   }
 }
 
-// Plays a warm acoustic bell note
+// Plays a warm, piano-like birthday note with a soft harmonic shimmer.
 function playSukoonTone(freq, duration = 1.0, isBass = false) {
   if (!audioCtx || freq === null) return;
   if (audioCtx.state === 'suspended') audioCtx.resume();
@@ -66,6 +67,8 @@ function playSukoonTone(freq, duration = 1.0, isBass = false) {
   const now = audioCtx.currentTime;
   const osc1 = audioCtx.createOscillator();
   const osc2 = audioCtx.createOscillator();
+  const mainToneGain = audioCtx.createGain();
+  const harmonicGain = audioCtx.createGain();
   const gainNode = audioCtx.createGain();
   const filter = audioCtx.createBiquadFilter();
 
@@ -73,19 +76,26 @@ function playSukoonTone(freq, duration = 1.0, isBass = false) {
   osc2.type = 'sine';
 
   osc1.frequency.setValueAtTime(freq, now);
-  osc2.frequency.setValueAtTime(freq * (isBass ? 1 : 2.004), now);
+  osc2.frequency.setValueAtTime(freq * 2.004, now);
+  osc1.frequency.exponentialRampToValueAtTime(freq * 0.998, now + duration);
+  osc2.frequency.exponentialRampToValueAtTime(freq * 2, now + duration);
+
+  mainToneGain.gain.setValueAtTime(isBass ? 0.8 : 0.9, now);
+  harmonicGain.gain.setValueAtTime(isBass ? 0.06 : 0.18, now);
 
   filter.type = 'lowpass';
-  filter.frequency.setValueAtTime(isBass ? 550 : 2200, now);
-  filter.frequency.exponentialRampToValueAtTime(isBass ? 200 : 500, now + duration);
+  filter.frequency.setValueAtTime(isBass ? 620 : 2600, now);
+  filter.frequency.exponentialRampToValueAtTime(isBass ? 180 : 650, now + duration);
 
-  const peakVol = isBass ? 0.22 : 0.20;
+  const peakVol = isBass ? 0.11 : 0.13;
   gainNode.gain.setValueAtTime(0.0001, now);
-  gainNode.gain.linearRampToValueAtTime(peakVol, now + 0.04);
-  gainNode.gain.exponentialRampToValueAtTime(0.0001, now + duration + 0.7);
+  gainNode.gain.linearRampToValueAtTime(peakVol, now + 0.025);
+  gainNode.gain.exponentialRampToValueAtTime(0.0001, now + duration + 0.9);
 
-  osc1.connect(filter);
-  osc2.connect(filter);
+  osc1.connect(mainToneGain);
+  osc2.connect(harmonicGain);
+  mainToneGain.connect(filter);
+  harmonicGain.connect(filter);
   filter.connect(gainNode);
   gainNode.connect(audioCtx.destination);
 
@@ -104,12 +114,16 @@ function playCrackerBurstSound() {
   if (audioCtx.state === 'suspended') audioCtx.resume();
   try {
     const now = audioCtx.currentTime;
+    // Several rockets can burst together. Let one clean burst through instead of
+    // stacking harsh sounds on top of each other.
+    if (now - lastCrackerSoundAt < 0.38) return;
+    lastCrackerSoundAt = now;
 
     // Master Dynamics Compressor for punchy volume without distortion
     const compressor = audioCtx.createDynamicsCompressor();
-    compressor.threshold.setValueAtTime(-12, now);
-    compressor.knee.setValueAtTime(8, now);
-    compressor.ratio.setValueAtTime(4, now);
+    compressor.threshold.setValueAtTime(-18, now);
+    compressor.knee.setValueAtTime(14, now);
+    compressor.ratio.setValueAtTime(7, now);
     compressor.attack.setValueAtTime(0.003, now);
     compressor.release.setValueAtTime(0.15, now);
     compressor.connect(audioCtx.destination);
@@ -121,7 +135,7 @@ function playCrackerBurstSound() {
     boomOsc.frequency.setValueAtTime(180 + Math.random() * 50, now);
     boomOsc.frequency.exponentialRampToValueAtTime(20, now + 0.45);
 
-    boomGain.gain.setValueAtTime(0.95, now);
+    boomGain.gain.setValueAtTime(0.42, now);
     boomGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.48);
 
     boomOsc.connect(boomGain);
@@ -136,7 +150,7 @@ function playCrackerBurstSound() {
     subOsc.frequency.setValueAtTime(95, now);
     subOsc.frequency.exponentialRampToValueAtTime(22, now + 0.4);
 
-    subGain.gain.setValueAtTime(0.85, now);
+    subGain.gain.setValueAtTime(0.28, now);
     subGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.42);
 
     subOsc.connect(subGain);
@@ -161,7 +175,7 @@ function playCrackerBurstSound() {
     noiseFilter.Q.setValueAtTime(1.2, now);
 
     const noiseGain = audioCtx.createGain();
-    noiseGain.gain.setValueAtTime(0.85, now);
+    noiseGain.gain.setValueAtTime(0.34, now);
     noiseGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.32);
 
     whiteNoise.connect(noiseFilter);
@@ -169,8 +183,8 @@ function playCrackerBurstSound() {
     noiseGain.connect(compressor);
     whiteNoise.start(now);
 
-    // 3. Realistic Sizzling Patakha Crackles (8 to 14 Loud Micro-Pops)
-    const crackleCount = 8 + Math.floor(Math.random() * 6);
+    // 3. Short, crisp crackles add realism without turning into noise.
+    const crackleCount = 5 + Math.floor(Math.random() * 4);
     for (let c = 0; c < crackleCount; c++) {
       const crackleDelay = 0.04 + Math.random() * 0.32;
       const cTime = now + crackleDelay;
@@ -181,7 +195,7 @@ function playCrackerBurstSound() {
       cOsc.frequency.setValueAtTime(750 + Math.random() * 1100, cTime);
       cOsc.frequency.exponentialRampToValueAtTime(60, cTime + 0.045);
 
-      cGain.gain.setValueAtTime(0.55, cTime);
+      cGain.gain.setValueAtTime(0.18, cTime);
       cGain.gain.exponentialRampToValueAtTime(0.0001, cTime + 0.05);
 
       cOsc.connect(cGain);
@@ -278,7 +292,9 @@ function resizeStars() {
 window.addEventListener('resize', resizeStars);
 resizeStars();
 
-const stars = Array.from({ length: 90 }, () => ({
+const isMobileViewport = window.matchMedia('(max-width: 767px)').matches;
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const stars = Array.from({ length: isMobileViewport ? 42 : 72 }, () => ({
   x: Math.random() * window.innerWidth,
   y: Math.random() * window.innerHeight,
   r: Math.random() * 1.5 + 0.4,
@@ -287,7 +303,14 @@ const stars = Array.from({ length: 90 }, () => ({
   color: Math.random() > 0.4 ? '#ffffff' : (Math.random() > 0.5 ? '#f6d365' : '#fda085')
 }));
 
-function animateStars() {
+let lastStarsFrame = 0;
+function animateStars(timestamp = 0) {
+  // The stars are ambience, so painting them at 25fps leaves more room for scrolling.
+  if (timestamp - lastStarsFrame < 40) {
+    requestAnimationFrame(animateStars);
+    return;
+  }
+  lastStarsFrame = timestamp;
   sCtx.clearRect(0, 0, starsCanvas.width, starsCanvas.height);
   stars.forEach(s => {
     s.alpha += s.speed;
@@ -297,7 +320,7 @@ function animateStars() {
     sCtx.beginPath();
     sCtx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
     sCtx.fillStyle = s.color;
-    sCtx.shadowBlur = 4;
+    sCtx.shadowBlur = isMobileViewport ? 0 : 3;
     sCtx.shadowColor = s.color;
     sCtx.fill();
     sCtx.restore();
@@ -388,12 +411,13 @@ class CrackerRocket {
   burst(particles) {
     // Blast / Dhamaka sound without whistle
     playCrackerBurstSound();
-    const count = 75 + Math.floor(Math.random() * 45);
+    // Keep bursts celebratory without creating hundreds of expensive glow draws.
+    const count = isMobileViewport ? 28 + Math.floor(Math.random() * 16) : 46 + Math.floor(Math.random() * 22);
     for (let i = 0; i < count; i++) {
       particles.push(new SparkParticle(this.x, this.y, this.color, 1));
     }
     const color2 = PALETTE[Math.floor(Math.random() * PALETTE.length)];
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < (isMobileViewport ? 8 : 12); i++) {
       particles.push(new SparkParticle(this.x, this.y, color2, 1.4));
     }
   }
@@ -424,7 +448,7 @@ let particles = [];
 function launchRockets(count = 2) {
   for (let i = 0; i < count; i++) {
     setTimeout(() => {
-      rockets.push(new CrackerRocket());
+      if (!document.hidden) rockets.push(new CrackerRocket());
     }, i * 280);
   }
 }
@@ -435,17 +459,29 @@ function triggerFireworks(event) {
 }
 
 // Timed firework shows
-setTimeout(() => launchRockets(3), 800);
-setInterval(() => launchRockets(2), 4200);
-setInterval(() => launchRockets(6), 14000);
+setTimeout(() => launchRockets(isMobileViewport ? 1 : 2), 800);
+setInterval(() => launchRockets(1), isMobileViewport ? 7000 : 5200);
+setInterval(() => launchRockets(isMobileViewport ? 2 : 4), 18000);
 
-function animateFireworks() {
+let lastFireworkFrame = 0;
+function animateFireworks(timestamp = 0) {
+  if (document.hidden || prefersReducedMotion) {
+    requestAnimationFrame(animateFireworks);
+    return;
+  }
+  if (timestamp - lastFireworkFrame < 33) {
+    requestAnimationFrame(animateFireworks);
+    return;
+  }
+  lastFireworkFrame = timestamp;
   fCtx.clearRect(0, 0, fwCanvas.width, fwCanvas.height);
   rockets = rockets.filter(r => {
     r.update(particles);
     if (!r.exploded) r.draw();
     return !r.exploded || r.trail.length > 0;
   });
+  // A hard cap prevents overlapping shows from blocking a scroll frame.
+  if (particles.length > 260) particles.splice(0, particles.length - 260);
   particles = particles.filter(p => {
     p.update();
     p.draw();
@@ -476,9 +512,11 @@ const flowerVarieties = [
   { grad: 'radial-gradient(ellipse at 30% 30%, #ffffff, #fdf4ff 60%, #e2e8f0)', radius: '50% 50% 50% 50% / 70% 70% 30% 30%', shadow: 'rgba(255, 255, 255, 0.45)', ratio: 1.2 }
 ];
 
-const totalPetals = window.innerWidth < 500 ? 22 : 36;
+const totalPetals = isMobileViewport ? 12 : 24;
+let activeScrollPetals = 0;
+let lastPetalBurstAt = 0;
 
-for (let i = 0; i < totalPetals; i++) {
+function addPetal(isScrollPetal = false) {
   const p = document.createElement('div');
   p.className = 'petal';
   
@@ -486,7 +524,7 @@ for (let i = 0; i < totalPetals; i++) {
   const width = Math.random() * 8 + 9;
   const height = width * flower.ratio;
   const duration = Math.random() * 8 + 7.5;
-  const delay = Math.random() * -20;
+  const delay = isScrollPetal ? 0 : Math.random() * -20;
   
   p.style.cssText = `
     left: ${Math.random() * 100}vw;
@@ -494,14 +532,37 @@ for (let i = 0; i < totalPetals; i++) {
     height: ${height}px;
     background: ${flower.grad};
     border-radius: ${flower.radius};
-    box-shadow: 0 4px 12px ${flower.shadow};
+  box-shadow: ${isMobileViewport ? 'none' : `0 4px 12px ${flower.shadow}`};
     animation-duration: ${duration}s;
     animation-delay: ${delay}s;
     opacity: ${Math.random() * 0.4 + 0.45};
-    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.25));
+    filter: ${isMobileViewport ? 'none' : 'drop-shadow(0 2px 6px rgba(0,0,0,0.25))'};
   `;
   petalsContainer.appendChild(p);
+
+  // Scroll petals are temporary, keeping the effect smooth even on long pages.
+  if (isScrollPetal) {
+    activeScrollPetals += 1;
+    setTimeout(() => {
+      p.remove();
+      activeScrollPetals -= 1;
+    }, duration * 1000 + 150);
+  }
 }
+
+for (let i = 0; i < totalPetals; i++) {
+  addPetal();
+}
+
+window.addEventListener('scroll', () => {
+  const now = Date.now();
+  const maxScrollPetals = isMobileViewport ? 10 : 16;
+  if (now - lastPetalBurstAt < 900 || activeScrollPetals >= maxScrollPetals) return;
+
+  lastPetalBurstAt = now;
+  const burstSize = isMobileViewport ? 2 : 3;
+  for (let i = 0; i < burstSize; i++) addPetal(true);
+}, { passive: true });
 
 /* ═══════════════════════════════════════════════════════════════
    6. HINGLISH TYPEWRITER EFFECT
@@ -595,12 +656,12 @@ const balloonGradients = [
 ];
 
 if (balloonsContainer) {
-  const totalBalloons = window.innerWidth < 500 ? 10 : 16;
+  const totalBalloons = isMobileViewport ? 6 : 12;
   for (let b = 0; b < totalBalloons; b++) {
     const el = document.createElement('div');
     el.className = 'balloon';
-    const isLeft = Math.random() > 0.5;
-    const posX = isLeft ? Math.random() * 22 : 78 + Math.random() * 20; // Float along the sides
+    // Use evenly spaced lanes so balloons never bunch up on one side.
+    const posX = 5 + (b * 90) / (totalBalloons - 1);
     const size = Math.random() * 16 + 36;
     const duration = Math.random() * 10 + 14;
     const delay = Math.random() * -25;
@@ -658,10 +719,8 @@ function createSparkle(x, y) {
   setTimeout(() => spark.remove(), 850);
 }
 
-window.addEventListener('mousemove', (e) => createSparkle(e.clientX, e.clientY), { passive: true });
-window.addEventListener('touchmove', (e) => {
-  if (e.touches && e.touches[0]) {
-    createSparkle(e.touches[0].clientX, e.touches[0].clientY);
-  }
-}, { passive: true });
-
+// Never create/animate DOM nodes during a touch scroll. It was the main source of
+// the "stuck" feeling on phones. The trail remains available for mouse users.
+if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+  window.addEventListener('mousemove', (e) => createSparkle(e.clientX, e.clientY), { passive: true });
+}

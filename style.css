@@ -1230,3 +1230,24 @@ footer span { color: var(--rose); }
   opacity: 1;
   transform: translateY(0);
 }
+
+/* Keep scrolling responsive on smaller touch devices. */
+@media (max-width: 767px) {
+  .balloon {
+    box-shadow: inset -4px -4px 8px rgba(0, 0, 0, 0.25), 0 3px 8px rgba(0, 0, 0, 0.25);
+  }
+
+  .hero-glow,
+  .hero-star {
+    animation-duration: 6s;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
