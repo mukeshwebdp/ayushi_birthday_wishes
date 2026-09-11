@@ -1,16 +1,12 @@
 /* ═══════════════════════════════════════════════════════════════
-   HAPPY BIRTHDAY AYUSHI - JAVASCRIPT ENGINE
-   (Audio Engine, Fireworks, Flower Shower, Typewriter, Lightbox)
-═══════════════════════════════════════════════════════════════ */
-
-/* ═══════════════════════════════════════════════════════════════
-   1. SOOTHING BACKGROUND MUSIC ENGINE (Web Audio API)
+   1. HIGH-FIDELITY "SUKOON" MUSIC & ACOUSTIC ENGINE
 ═══════════════════════════════════════════════════════════════ */
 let audioCtx = null;
 let isMusicPlaying = false;
 let musicTimer = null;
 let noteIndex = 0;
 let lastCrackerSoundAt = -Infinity;
+let masterReverb = null;
 
 // Musical Note Frequencies in Hz
 const N = {
@@ -20,7 +16,6 @@ const N = {
 };
 
 // Gentle, Slow, Emotional "Sukoon" Birthday Melody Score
-// Format: [Melody Note, Duration in seconds, Bass/Chord Note]
 const sukoonScore = [
   // Phrase 1: Happy Birthday to you...
   [N.G4, 0.5, N.C3], [N.G4, 0.5, null], [N.A4, 0.9, N.G3], [N.G4, 0.9, null], [N.C5, 0.9, N.C4], [N.B4, 1.8, N.G3],
@@ -44,6 +39,42 @@ function initAudioContext() {
   }
 }
 
+// Lush Acoustic Ambience / Reverb Node
+function getReverbInput() {
+  if (!audioCtx) return null;
+  if (masterReverb) return masterReverb.input;
+  try {
+    const rate = audioCtx.sampleRate;
+    const length = Math.floor(rate * 1.5);
+    const impulse = audioCtx.createBuffer(2, length, rate);
+    const left = impulse.getChannelData(0);
+    const right = impulse.getChannelData(1);
+    for (let i = 0; i < length; i++) {
+      const decay = Math.exp(-i / (rate * 0.35));
+      left[i] = (Math.random() * 2 - 1) * decay;
+      right[i] = (Math.random() * 2 - 1) * decay;
+    }
+    const convolver = audioCtx.createConvolver();
+    convolver.buffer = impulse;
+
+    const reverbGain = audioCtx.createGain();
+    reverbGain.gain.setValueAtTime(0.22, audioCtx.currentTime);
+
+    const lowpass = audioCtx.createBiquadFilter();
+    lowpass.type = 'lowpass';
+    lowpass.frequency.setValueAtTime(3200, audioCtx.currentTime);
+
+    convolver.connect(lowpass);
+    lowpass.connect(reverbGain);
+    reverbGain.connect(audioCtx.destination);
+
+    masterReverb = { input: convolver };
+    return masterReverb.input;
+  } catch(e) {
+    return null;
+  }
+}
+
 function updateMusicToggleUI() {
   const btn = document.getElementById('musicToggleBtn');
   const icon = document.getElementById('musicIcon');
@@ -59,54 +90,82 @@ function updateMusicToggleUI() {
   }
 }
 
-// Plays a warm, piano-like birthday note with a soft harmonic shimmer.
+// Rich, warm music box celesta bell tone with harmonic sparkle & soft reverb
 function playSukoonTone(freq, duration = 1.0, isBass = false) {
   if (!audioCtx || freq === null) return;
   if (audioCtx.state === 'suspended') audioCtx.resume();
 
   const now = audioCtx.currentTime;
+  const reverbInput = getReverbInput();
+
+  // 1. Fundamental Tone (Warmth)
   const osc1 = audioCtx.createOscillator();
-  const osc2 = audioCtx.createOscillator();
-  const mainToneGain = audioCtx.createGain();
-  const harmonicGain = audioCtx.createGain();
-  const gainNode = audioCtx.createGain();
-  const filter = audioCtx.createBiquadFilter();
-
+  const gain1 = audioCtx.createGain();
   osc1.type = isBass ? 'triangle' : 'sine';
-  osc2.type = 'sine';
-
   osc1.frequency.setValueAtTime(freq, now);
-  osc2.frequency.setValueAtTime(freq * 2.004, now);
-  osc1.frequency.exponentialRampToValueAtTime(freq * 0.998, now + duration);
-  osc2.frequency.exponentialRampToValueAtTime(freq * 2, now + duration);
 
-  mainToneGain.gain.setValueAtTime(isBass ? 0.8 : 0.9, now);
-  harmonicGain.gain.setValueAtTime(isBass ? 0.06 : 0.18, now);
+  // 2. Harmonic Bell Chime (Octave overtone)
+  const osc2 = audioCtx.createOscillator();
+  const gain2 = audioCtx.createGain();
+  osc2.type = 'sine';
+  osc2.frequency.setValueAtTime(freq * (isBass ? 1 : 2.003), now);
 
+  // 3. Delicate Crystal Sparkle (High bell shimmer)
+  const osc3 = audioCtx.createOscillator();
+  const gain3 = audioCtx.createGain();
+  osc3.type = 'sine';
+  osc3.frequency.setValueAtTime(freq * 3.01, now);
+
+  // Filter for soft, mellow warmth
+  const filter = audioCtx.createBiquadFilter();
   filter.type = 'lowpass';
-  filter.frequency.setValueAtTime(isBass ? 620 : 2600, now);
-  filter.frequency.exponentialRampToValueAtTime(isBass ? 180 : 650, now + duration);
+  filter.frequency.setValueAtTime(isBass ? 580 : 3200, now);
+  filter.frequency.exponentialRampToValueAtTime(isBass ? 160 : 750, now + duration);
 
-  const peakVol = isBass ? 0.11 : 0.13;
-  gainNode.gain.setValueAtTime(0.0001, now);
-  gainNode.gain.linearRampToValueAtTime(peakVol, now + 0.025);
-  gainNode.gain.exponentialRampToValueAtTime(0.0001, now + duration + 0.9);
+  // Master Gain & Envelope
+  const masterGain = audioCtx.createGain();
+  const peakVol = isBass ? 0.16 : 0.18;
 
-  osc1.connect(mainToneGain);
-  osc2.connect(harmonicGain);
-  mainToneGain.connect(filter);
-  harmonicGain.connect(filter);
-  filter.connect(gainNode);
-  gainNode.connect(audioCtx.destination);
+  // Gentle acoustic hammer attack & long singing decay
+  masterGain.gain.setValueAtTime(0.0001, now);
+  masterGain.gain.linearRampToValueAtTime(peakVol, now + 0.02);
+  masterGain.gain.exponentialRampToValueAtTime(0.0001, now + duration + 1.2);
+
+  gain1.gain.setValueAtTime(isBass ? 0.9 : 0.75, now);
+  gain2.gain.setValueAtTime(isBass ? 0.15 : 0.28, now);
+  gain3.gain.setValueAtTime(isBass ? 0.02 : 0.10, now);
+
+  osc1.connect(gain1);
+  osc2.connect(gain2);
+  osc3.connect(gain3);
+
+  gain1.connect(filter);
+  gain2.connect(filter);
+  gain3.connect(filter);
+
+  filter.connect(masterGain);
+  masterGain.connect(audioCtx.destination);
+
+  // Send subtle wet signal to ambient reverb
+  if (reverbInput) {
+    const wetGain = audioCtx.createGain();
+    wetGain.gain.setValueAtTime(isBass ? 0.10 : 0.25, now);
+    masterGain.connect(wetGain);
+    wetGain.connect(reverbInput);
+  }
 
   osc1.start(now);
   osc2.start(now);
-  osc1.stop(now + duration + 0.8);
-  osc2.stop(now + duration + 0.8);
+  osc3.start(now);
+
+  const stopTime = now + duration + 1.3;
+  osc1.stop(stopTime);
+  osc2.stop(stopTime);
+  osc3.stop(stopTime);
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   2. POWERFUL, LOUD & REALISTIC CRACKER SOUND (NO "TUU TUU" WHISTLE)
+   2. CINEMATIC REALISTIC FIREWORK BURST SOUND (NO WHISTLE)
 ═══════════════════════════════════════════════════════════════ */
 function playCrackerBurstSound() {
   if (!audioCtx) initAudioContext();
@@ -114,56 +173,54 @@ function playCrackerBurstSound() {
   if (audioCtx.state === 'suspended') audioCtx.resume();
   try {
     const now = audioCtx.currentTime;
-    // Several rockets can burst together. Let one clean burst through instead of
-    // stacking harsh sounds on top of each other.
-    if (now - lastCrackerSoundAt < 0.38) return;
+    if (now - lastCrackerSoundAt < 0.26) return; // Prevent harsh overlap
     lastCrackerSoundAt = now;
 
-    // Master Dynamics Compressor for punchy volume without distortion
+    // Master Compressor for clean, powerful punch without digital distortion
     const compressor = audioCtx.createDynamicsCompressor();
-    compressor.threshold.setValueAtTime(-18, now);
-    compressor.knee.setValueAtTime(14, now);
-    compressor.ratio.setValueAtTime(7, now);
-    compressor.attack.setValueAtTime(0.003, now);
-    compressor.release.setValueAtTime(0.15, now);
+    compressor.threshold.setValueAtTime(-16, now);
+    compressor.knee.setValueAtTime(12, now);
+    compressor.ratio.setValueAtTime(6, now);
+    compressor.attack.setValueAtTime(0.002, now);
+    compressor.release.setValueAtTime(0.18, now);
     compressor.connect(audioCtx.destination);
 
-    // 1. Heavy Deep Boom / Thump (Dhamaka Bass Layer 1)
+    // 1. Initial Detonation Crack (Acoustic transient snap)
+    const snapOsc = audioCtx.createOscillator();
+    const snapGain = audioCtx.createGain();
+    snapOsc.type = 'sawtooth';
+    snapOsc.frequency.setValueAtTime(800 + Math.random() * 300, now);
+    snapOsc.frequency.exponentialRampToValueAtTime(80, now + 0.05);
+
+    snapGain.gain.setValueAtTime(0.40, now);
+    snapGain.gain.exponentialRampToValueAtTime(0.001, now + 0.055);
+
+    snapOsc.connect(snapGain);
+    snapGain.connect(compressor);
+    snapOsc.start(now);
+    snapOsc.stop(now + 0.06);
+
+    // 2. Deep Sub-Bass Thump (Physical pressure wave)
     const boomOsc = audioCtx.createOscillator();
     const boomGain = audioCtx.createGain();
     boomOsc.type = 'triangle';
-    boomOsc.frequency.setValueAtTime(180 + Math.random() * 50, now);
-    boomOsc.frequency.exponentialRampToValueAtTime(20, now + 0.45);
+    boomOsc.frequency.setValueAtTime(145 + Math.random() * 35, now);
+    boomOsc.frequency.exponentialRampToValueAtTime(22, now + 0.42);
 
-    boomGain.gain.setValueAtTime(0.42, now);
-    boomGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.48);
+    boomGain.gain.setValueAtTime(0.68, now);
+    boomGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.45);
 
     boomOsc.connect(boomGain);
     boomGain.connect(compressor);
     boomOsc.start(now);
-    boomOsc.stop(now + 0.5);
+    boomOsc.stop(now + 0.48);
 
-    // 1b. Sub Rumble (Layer 2 for heavy physical punch)
-    const subOsc = audioCtx.createOscillator();
-    const subGain = audioCtx.createGain();
-    subOsc.type = 'sine';
-    subOsc.frequency.setValueAtTime(95, now);
-    subOsc.frequency.exponentialRampToValueAtTime(22, now + 0.4);
-
-    subGain.gain.setValueAtTime(0.28, now);
-    subGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.42);
-
-    subOsc.connect(subGain);
-    subGain.connect(compressor);
-    subOsc.start(now);
-    subOsc.stop(now + 0.44);
-
-    // 2. Loud White Noise Shockwave Blast (Crisp Explosion Crack)
-    const bufferSize = Math.floor(audioCtx.sampleRate * 0.35);
+    // 3. Realistic Air Shockwave (Acoustic explosion roar)
+    const bufferSize = Math.floor(audioCtx.sampleRate * 0.32);
     const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
     const output = noiseBuffer.getChannelData(0);
     for (let i = 0; i < bufferSize; i++) {
-      output[i] = (Math.random() * 2 - 1) * Math.exp(-i / (audioCtx.sampleRate * 0.08));
+      output[i] = (Math.random() * 2 - 1) * Math.exp(-i / (audioCtx.sampleRate * 0.075));
     }
 
     const whiteNoise = audioCtx.createBufferSource();
@@ -171,38 +228,80 @@ function playCrackerBurstSound() {
 
     const noiseFilter = audioCtx.createBiquadFilter();
     noiseFilter.type = 'bandpass';
-    noiseFilter.frequency.setValueAtTime(1400 + Math.random() * 800, now);
-    noiseFilter.Q.setValueAtTime(1.2, now);
+    noiseFilter.frequency.setValueAtTime(1200 + Math.random() * 600, now);
+    noiseFilter.Q.setValueAtTime(1.1, now);
 
     const noiseGain = audioCtx.createGain();
-    noiseGain.gain.setValueAtTime(0.34, now);
-    noiseGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.32);
+    noiseGain.gain.setValueAtTime(0.48, now);
+    noiseGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.30);
 
     whiteNoise.connect(noiseFilter);
     noiseFilter.connect(noiseGain);
     noiseGain.connect(compressor);
     whiteNoise.start(now);
 
-    // 3. Short, crisp crackles add realism without turning into noise.
-    const crackleCount = 5 + Math.floor(Math.random() * 4);
+    // 4. Golden Sizzling Phooljhadi Crackles
+    const crackleCount = 7 + Math.floor(Math.random() * 5);
     for (let c = 0; c < crackleCount; c++) {
-      const crackleDelay = 0.04 + Math.random() * 0.32;
-      const cTime = now + crackleDelay;
+      const cDelay = 0.05 + Math.random() * 0.28;
+      const cTime = now + cDelay;
 
       const cOsc = audioCtx.createOscillator();
       const cGain = audioCtx.createGain();
       cOsc.type = 'sawtooth';
-      cOsc.frequency.setValueAtTime(750 + Math.random() * 1100, cTime);
-      cOsc.frequency.exponentialRampToValueAtTime(60, cTime + 0.045);
+      cOsc.frequency.setValueAtTime(900 + Math.random() * 1200, cTime);
+      cOsc.frequency.exponentialRampToValueAtTime(60, cTime + 0.038);
 
-      cGain.gain.setValueAtTime(0.18, cTime);
-      cGain.gain.exponentialRampToValueAtTime(0.0001, cTime + 0.05);
+      cGain.gain.setValueAtTime(0.24, cTime);
+      cGain.gain.exponentialRampToValueAtTime(0.0001, cTime + 0.042);
 
       cOsc.connect(cGain);
       cGain.connect(compressor);
       cOsc.start(cTime);
-      cOsc.stop(cTime + 0.055);
+      cOsc.stop(cTime + 0.045);
     }
+  } catch(e) {}
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   3. CUTE & HYPER-SATISFYING BALLOON POP SOUND (FOR GAME)
+═══════════════════════════════════════════════════════════════ */
+function playBalloonPopSound(pts = 10) {
+  if (!audioCtx) initAudioContext();
+  if (!audioCtx) return;
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+  try {
+    const now = audioCtx.currentTime;
+
+    // 1. Crisp Snappy Pop (Quick Pitch-Drop)
+    const popOsc = audioCtx.createOscillator();
+    const popGain = audioCtx.createGain();
+    popOsc.type = 'sine';
+    popOsc.frequency.setValueAtTime(560 + Math.random() * 120, now);
+    popOsc.frequency.exponentialRampToValueAtTime(70, now + 0.06);
+
+    popGain.gain.setValueAtTime(0.35, now);
+    popGain.gain.exponentialRampToValueAtTime(0.001, now + 0.07);
+
+    popOsc.connect(popGain);
+    popGain.connect(audioCtx.destination);
+    popOsc.start(now);
+    popOsc.stop(now + 0.075);
+
+    // 2. Cheerful Chime Sparkle based on Points
+    const chimeFreq = 523.25 * (1 + (pts / 50)); // Higher chime for bigger score
+    const chimeOsc = audioCtx.createOscillator();
+    const chimeGain = audioCtx.createGain();
+    chimeOsc.type = 'sine';
+    chimeOsc.frequency.setValueAtTime(chimeFreq, now + 0.02);
+
+    chimeGain.gain.setValueAtTime(0.14, now + 0.02);
+    chimeGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.32);
+
+    chimeOsc.connect(chimeGain);
+    chimeGain.connect(audioCtx.destination);
+    chimeOsc.start(now + 0.02);
+    chimeOsc.stop(now + 0.34);
   } catch(e) {}
 }
 
@@ -614,6 +713,20 @@ const observer = new IntersectionObserver((entries) => {
 
 document.querySelectorAll('.reveal-item').forEach(el => observer.observe(el));
 
+// Show a graceful loader until each lazy-loaded memory photo is ready.
+document.querySelectorAll('.photo-card img').forEach((img) => {
+  const card = img.closest('.photo-card');
+  if (!card) return;
+
+  const finishLoading = () => card.classList.remove('photo-loading');
+  card.classList.add('photo-loading');
+  img.addEventListener('load', finishLoading, { once: true });
+  img.addEventListener('error', finishLoading, { once: true });
+
+  // Cached images may have completed before this script runs.
+  if (img.complete) finishLoading();
+});
+
 /* ═══════════════════════════════════════════════════════════════
    8. LIGHTBOX FUNCTIONALITY
 ═══════════════════════════════════════════════════════════════ */
@@ -724,3 +837,436 @@ function createSparkle(x, y) {
 if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
   window.addEventListener('mousemove', (e) => createSparkle(e.clientX, e.clientY), { passive: true });
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   11. BIRTHDAY COUNTDOWN TIMER (TARGET: 13 SEPTEMBER)
+═══════════════════════════════════════════════════════════════ */
+function updateCountdown() {
+  const now = new Date();
+  const year = now.getFullYear();
+  // Month is 0-indexed: 8 = September, Day 13
+  let next = new Date(year, 8, 13, 0, 0, 0);
+
+  // If today is Sept 13 itself:
+  if (now.getMonth() === 8 && now.getDate() === 13) {
+    const sub = document.querySelector('.countdown-section .sec-subtitle');
+    if (sub) sub.innerHTML = "🎉 <strong style='color:var(--gold);'>Aaj Ayushi Didi ka Birthday hai! Happy Birthday!</strong> 👑🎂";
+  } else if (now.getTime() > next.getTime()) {
+    next = new Date(year + 1, 8, 13, 0, 0, 0);
+  }
+
+  const diff = Math.max(0, next - now);
+  const days  = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const mins  = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+  const secs  = Math.floor((diff % (1000 * 60)) / 1000);
+
+  function setAndTick(id, val) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const str = String(val).padStart(2, '0');
+    if (el.textContent !== str) {
+      el.textContent = str;
+      el.classList.remove('tick');
+      void el.offsetWidth;
+      el.classList.add('tick');
+      setTimeout(() => el.classList.remove('tick'), 200);
+    }
+  }
+  setAndTick('cd-days', days);
+  setAndTick('cd-hours', hours);
+  setAndTick('cd-mins', mins);
+  setAndTick('cd-secs', secs);
+}
+updateCountdown();
+setInterval(updateCountdown, 1000);
+
+/* ═══════════════════════════════════════════════════════════════
+   12. BALLOON POP GAME ENGINE
+═══════════════════════════════════════════════════════════════ */
+let gameScore = 0, gamePopped = 0, gameTimeLeft = 30;
+let gameActive = false, gameInterval = null, balloonInterval = null;
+
+const BALLOON_COLORS = [
+  'radial-gradient(circle at 35% 30%, #ffd1dc, #ff6b8b 65%, #c9184a)',
+  'radial-gradient(circle at 35% 30%, #fff3b0, #ffd166 65%, #f77f00)',
+  'radial-gradient(circle at 35% 30%, #e0aaff, #c77dff 65%, #7b2cbf)',
+  'radial-gradient(circle at 35% 30%, #bbf7d0, #4ade80 65%, #15803d)',
+  'radial-gradient(circle at 35% 30%, #bae6fd, #38bdf8 65%, #0369a1)',
+  'radial-gradient(circle at 35% 30%, #ffd6a5, #ffb347 65%, #e67e00)',
+  'radial-gradient(circle at 35% 30%, #ffb3c6, #ff4d6d 65%, #9d0208)'
+];
+const BALLOON_EMOJIS = ['🎈', '🌸', '⭐', '💖', '🎉', '✨', '🌟', '💫', '🌹', '👑'];
+const LEVEL_LABELS = ['🌸 Beginner', '⭐ Rising Star', '🏅 Pro Popper', '🏆 Legend!', '👑 Birthday Queen!'];
+
+function getLevelInfo(score) {
+  if (score < 50)  return { label: LEVEL_LABELS[0], color: '#fda085' };
+  if (score < 120) return { label: LEVEL_LABELS[1], color: '#ffd166' };
+  if (score < 220) return { label: LEVEL_LABELS[2], color: '#00c9a7' };
+  if (score < 350) return { label: LEVEL_LABELS[3], color: '#f6d365' };
+  return { label: LEVEL_LABELS[4], color: '#ff6b8b' };
+}
+
+function spawnBalloon() {
+  const arena = document.getElementById('gameArena');
+  if (!arena || !gameActive) return;
+
+  const el = document.createElement('div');
+  el.className = 'game-balloon';
+  const size = Math.random() * 28 + 46;
+  const left = Math.random() * 82 + 5;
+  const riseTime = Math.random() * 2.0 + 3.2;
+  const points = Math.round((60 / size) * 30);
+  const grad = BALLOON_COLORS[Math.floor(Math.random() * BALLOON_COLORS.length)];
+  const emoji = BALLOON_EMOJIS[Math.floor(Math.random() * BALLOON_EMOJIS.length)];
+
+  el.style.cssText = 'width: ' + size + 'px; height: ' + (size * 1.25) + 'px; left: ' + left + '%; bottom: -80px; background: ' + grad + '; animation-duration: ' + riseTime + 's;';
+  el.textContent = emoji;
+  el.dataset.points = points;
+
+  el.addEventListener('click', (e) => popBalloon(el, e), { passive: true });
+  el.addEventListener('touchstart', (e) => { e.preventDefault(); popBalloon(el, e.touches[0]); }, { passive: false });
+
+  arena.appendChild(el);
+  setTimeout(() => el.remove(), riseTime * 1000 + 200);
+}
+
+function popBalloon(el, e) {
+  if (!gameActive || !el.parentNode) return;
+  const pts = parseInt(el.dataset.points) || 10;
+  gameScore += pts;
+  gamePopped++;
+
+  const burst = document.createElement('div');
+  burst.className = 'balloon-pop';
+  burst.textContent = ['💥', '✨', '🌟', '💖', '⭐'][Math.floor(Math.random() * 5)];
+  const arena = document.getElementById('gameArena');
+  const arenaRect = arena.getBoundingClientRect();
+  burst.style.cssText = 'left: ' + (e.clientX - arenaRect.left - 20) + 'px; top: ' + (e.clientY - arenaRect.top - 20) + 'px;';
+  arena.appendChild(burst);
+  setTimeout(() => burst.remove(), 600);
+
+  const scoreEl = document.createElement('div');
+  scoreEl.style.cssText = 'position: absolute; left: ' + (e.clientX - arenaRect.left) + 'px; top: ' + (e.clientY - arenaRect.top - 10) + 'px; color: #ffd166; font-weight: 800; font-size: 1.1rem; pointer-events: none; z-index: 30; animation: popBurst 0.7s ease forwards;';
+  scoreEl.textContent = '+' + pts;
+  arena.appendChild(scoreEl);
+  setTimeout(() => scoreEl.remove(), 700);
+
+  el.remove();
+
+  document.getElementById('game-score').textContent = gameScore;
+  document.getElementById('game-popped').textContent = gamePopped;
+
+  const level = getLevelInfo(gameScore);
+  const badge = document.getElementById('level-badge');
+  if (badge) { badge.textContent = level.label; badge.style.color = level.color; }
+
+  if (typeof playBalloonPopSound === "function") playBalloonPopSound(pts); else if (typeof playCrackerBurstSound === "function") playCrackerBurstSound();
+}
+
+function startBalloonGame() {
+  const arena = document.getElementById('gameArena');
+  const startOverlay = document.getElementById('gameStartOverlay');
+  if (startOverlay) startOverlay.classList.add('hidden');
+
+  gameScore = 0; gamePopped = 0; gameTimeLeft = 30;
+  gameActive = true;
+  document.getElementById('game-score').textContent = 0;
+  document.getElementById('game-popped').textContent = 0;
+  document.getElementById('game-timer').textContent = 30;
+
+  balloonInterval = setInterval(spawnBalloon, 800);
+  setTimeout(() => { if (gameActive) { clearInterval(balloonInterval); balloonInterval = setInterval(spawnBalloon, 600); } }, 10000);
+  setTimeout(() => { if (gameActive) { clearInterval(balloonInterval); balloonInterval = setInterval(spawnBalloon, 450); } }, 20000);
+
+  gameInterval = setInterval(() => {
+    gameTimeLeft--;
+    const timerEl = document.getElementById('game-timer');
+    if (timerEl) {
+      timerEl.textContent = gameTimeLeft;
+      if (gameTimeLeft <= 5) timerEl.style.color = '#ff6b8b';
+    }
+    if (gameTimeLeft <= 0) endBalloonGame();
+  }, 1000);
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   DYNAMIC REWARD POOL (ROTATES A NEW REWARD ON EVERY PLAY!)
+═══════════════════════════════════════════════════════════════ */
+let rewardPlayCount = 0;
+const REWARD_POOL = [
+  {
+    ribbon: '🎁 SPECIAL BIRTHDAY REWARD #1 🎁',
+    badge: '👑 Best Sister of the Universe 👑',
+    title: 'Golden Sister VIP Pass ✨',
+    text: 'Yeh pass Ayushi Didi ko Mukesh ki taraf se <strong>Unlimited Treats, Favorite Foods, Silly Jokes aur Lifetime Support</strong> ka permanent right deta hai! 💖',
+    stamp: 'VERIFIED WITH LOVE ❤️'
+  },
+  {
+    ribbon: '🍫 SPECIAL BIRTHDAY REWARD #2 🍫',
+    badge: '🍨 Didi\'s Sweet Tooth Pass 🍰',
+    title: 'Free Ice-Cream & Chocolates Voucher 🍦',
+    text: 'Jab bhi Didi ka sweet crave kare, ye voucher redeem karo — Mukesh bina kisi nakhre ke aapki favourite chocolates aur dessert lekar hazir hoga! 😋',
+    stamp: '100% SWEET GUARANTEE 🍬'
+  },
+  {
+    ribbon: '🎬 SPECIAL BIRTHDAY REWARD #3 🎬',
+    badge: '🍿 Personal Entertainer On Duty 🎭',
+    title: 'Midnight Masti & Movie Night Ticket 🎬',
+    text: 'Aapki pasand ki movie/web-series, unlimited popcorn aur ghanton tak dil khol ke late-night gossip — full VIP brother attention! 🛋️✨',
+    stamp: 'POPCORN APPROVED 🍿'
+  },
+  {
+    ribbon: '⚡ SPECIAL BIRTHDAY REWARD #4 ⚡',
+    badge: '👑 Ghar Ki Supreme Boss 👑',
+    title: '"Didi Is Always Right" Immunity Card 🛡️',
+    text: 'Kisi bhi aane wali ladai ya argument mein ye card dikha dena — Mukesh bina kisi debate ke haar maan lega kyunki <strong>Didi hamesha sahi hoti hain!</strong> 😎',
+    stamp: 'NO QUESTIONS ASKED ⚖️'
+  },
+  {
+    ribbon: '💆‍♀️ SPECIAL BIRTHDAY REWARD #5 💆‍♀️',
+    badge: '🌸 Queen Deserves Pampering 🌸',
+    title: 'Stress-Free "Hukum Mere Aaka" Day Pass ☕',
+    text: 'Aap aaram se rest karo — chai/coffee banani ho, koi cheez laani ho ya koi bhi chhota-bada kaam, aaj sab Mukesh karega! ☕✨',
+    stamp: 'QUEEN TREATMENT 👑'
+  },
+  {
+    ribbon: '💖 SPECIAL BIRTHDAY REWARD #6 💖',
+    badge: '🌟 Ek Anmol Rishta 🌟',
+    title: 'Lifetime Brother Promise Card 🔒',
+    text: 'Zindagi ke har mod par, har khushi aur har challenge mein — aapka bhai hamesha ek call ki doori par aapke saath garv se khada rahega! 🤗❤️',
+    stamp: 'PROMISE FOR LIFE 🔒'
+  }
+];
+
+function endBalloonGame() {
+  gameActive = false;
+  clearInterval(gameInterval);
+  clearInterval(balloonInterval);
+
+  const arena = document.getElementById('gameArena');
+  if (arena) arena.querySelectorAll('.game-balloon').forEach(b => b.remove());
+
+  if (typeof launchRockets === 'function') launchRockets(4);
+
+  const endOverlay = document.getElementById('gameEndOverlay');
+  const level = getLevelInfo(gameScore);
+  const titles = { 0: 'Koshish Karo! 🌸', 50: 'Wah Didi! 🌸', 120: 'Bhaari hai Didi! ⭐', 220: 'Legend! 🏆', 350: 'Birthday Queen! 👑' };
+  let title = 'Wah Didi! 🌸';
+  for (const [min, t] of Object.entries(titles)) if (gameScore >= parseInt(min)) title = t;
+  
+  const endTitleEl = document.getElementById('gameEndTitle');
+  if (endTitleEl) endTitleEl.textContent = title;
+  
+  const finalScoreEl = document.getElementById('finalScore');
+  if (finalScoreEl) finalScoreEl.textContent = gameScore;
+  
+  const endMsgEl = document.getElementById('gameEndMsg');
+  if (endMsgEl) {
+    endMsgEl.innerHTML = 'Aapne <strong style="color:var(--gold)">' + gameScore + '</strong> points score kiye aur <strong style="color:var(--rose)">' + gamePopped + '</strong> balloons pop kiye! ' + level.label;
+  }
+
+  // Pick a fresh reward from the pool on every single play!
+  const currentReward = REWARD_POOL[rewardPlayCount % REWARD_POOL.length];
+  rewardPlayCount++;
+
+  const ribbonEl = document.querySelector('.reward-ribbon');
+  const badgeEl = document.querySelector('.reward-badge');
+  const titleEl = document.querySelector('.reward-title');
+  const textEl = document.querySelector('.reward-text');
+  const stampEl = document.querySelector('.reward-stamp');
+
+  if (ribbonEl) ribbonEl.textContent = currentReward.ribbon;
+  if (badgeEl) badgeEl.textContent = currentReward.badge;
+  if (titleEl) titleEl.textContent = currentReward.title;
+  if (textEl) textEl.innerHTML = currentReward.text;
+  if (stampEl) {
+    stampEl.textContent = currentReward.stamp;
+    stampEl.style.background = 'linear-gradient(135deg, #f6d365, #ff6b8b)';
+  }
+
+  if (endOverlay) endOverlay.classList.remove('hidden');
+}
+
+function resetBalloonGame() {
+  const endOverlay = document.getElementById('gameEndOverlay');
+  const startOverlay = document.getElementById('gameStartOverlay');
+  if (endOverlay) endOverlay.classList.add('hidden');
+  if (startOverlay) startOverlay.classList.remove('hidden');
+  gameTimeLeft = 30;
+  const timerEl = document.getElementById('game-timer');
+  if (timerEl) { timerEl.textContent = 30; timerEl.style.color = ''; }
+  document.getElementById('game-score').textContent = 0;
+  document.getElementById('game-popped').textContent = 0;
+  const badge = document.getElementById('level-badge');
+  if (badge) { badge.textContent = LEVEL_LABELS[0]; badge.style.color = ''; }
+}
+
+function celebrateReward() {
+  if (typeof launchRockets === 'function') {
+    launchRockets(8); // Grand fireworks burst
+  }
+  const stamp = document.querySelector('.reward-stamp');
+  if (stamp) {
+    stamp.textContent = '🎉 REWARD CLAIMED! 💖';
+    stamp.style.background = 'linear-gradient(135deg, #00c9a7, #f6d365)';
+  }
+  if (typeof playSukoonTone === 'function') {
+    playSukoonTone(523.25, 0.25);
+    setTimeout(() => playSukoonTone(659.25, 0.25), 160);
+    setTimeout(() => playSukoonTone(783.99, 0.35), 320);
+    setTimeout(() => playSukoonTone(1046.50, 1.0), 480);
+  }
+
+  // After 1.4 seconds of celebration, ask if she wants to play again for the next reward!
+  setTimeout(() => {
+    const promptModal = document.getElementById('claimPromptOverlay');
+    if (promptModal) {
+      promptModal.classList.remove('hidden');
+    }
+  }, 1400);
+}
+
+function acceptPlayAgain() {
+  const promptModal = document.getElementById('claimPromptOverlay');
+  if (promptModal) promptModal.classList.add('hidden');
+  resetBalloonGame();
+  setTimeout(() => {
+    startBalloonGame();
+  }, 200);
+}
+
+function closeClaimPrompt() {
+  const promptModal = document.getElementById('claimPromptOverlay');
+  if (promptModal) promptModal.classList.add('hidden');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   13. REAL-TIME AUTOMATIC SUN & MOON + IN-MODAL SWITCHER
+═══════════════════════════════════════════════════════════════ */
+const CELESTIAL_DATA = {
+  moon: {
+    icon: '🌙',
+    badge: '✨ RAAT KI CHAON · DIL SE ✨',
+    quote: '"Jaise chand sitaron ke beech chamakta hai, waise hi aap hamari zindagi ko roshan karti ho, Ayushi Didi!"',
+    sub: 'Aapki smile aur presence hamari zindagi ki sabse badi khushi hai. Hamesha aise hi chamakti raho! 💖🌹',
+    glow: 'rgba(246, 211, 101, 0.25)'
+  },
+  sun: {
+    icon: '☀️',
+    badge: '✨ SUBAH KI KIRAN · DIL SE ✨',
+    quote: '"Jaise subah ka sooraj saari duniya ko nayi roshni, garmahat aur taazgi deta hai, waise hi aapki muskaan hamari zindagi mein khushiyan bikher deti hai, Ayushi Didi!"',
+    sub: 'Aapki positive energy aur khilkhilati hansi se hamari zindagi ka har pal hamesha roshan aur khushnuma rehta hai. Keep shining, sunshine! ☀️🌸',
+    glow: 'rgba(255, 175, 50, 0.35)'
+  }
+};
+
+let modalCurrentView = null; // 'moon' or 'sun'
+
+function updateCelestialSky() {
+  const celestial = document.getElementById('skyCelestial');
+  const icon = document.getElementById('celestialIcon');
+  const greeting = document.getElementById('celestialGreeting');
+  if (!celestial || !icon) return;
+
+  const now = new Date();
+  const hours = now.getHours(); // 0 - 23
+
+  // STRICT REAL-TIME: Day is 6:00 AM to 6:00 PM (18:00), Night is 6:00 PM to 6:00 AM
+  const isNight = (hours >= 18 || hours < 6);
+
+  if (isNight) {
+    celestial.classList.remove('sun-mode');
+    celestial.classList.add('moon-mode');
+    icon.textContent = '🌙';
+    if (greeting) {
+      if (hours >= 18 && hours < 21) greeting.textContent = 'Khoobsurat Shaam Didi ✨';
+      else if (hours >= 21 || hours < 4) greeting.textContent = 'Taaron Bhari Raat 🌙';
+      else greeting.textContent = 'Taaron Ki Chaon 🌌';
+    }
+  } else {
+    celestial.classList.remove('moon-mode');
+    celestial.classList.add('sun-mode');
+    icon.textContent = '☀️';
+    if (greeting) {
+      if (hours >= 6 && hours < 12) greeting.textContent = 'Khilti Hui Subah ☀️';
+      else greeting.textContent = 'Roshan Din Didi 🌞';
+    }
+  }
+}
+
+function openCelestialModal(event) {
+  if (event) event.stopPropagation();
+  const now = new Date();
+  const isNight = (now.getHours() >= 18 || now.getHours() < 6);
+  
+  // Default to current time mode on open
+  modalCurrentView = isNight ? 'moon' : 'sun';
+  applyModalView(modalCurrentView);
+
+  const modal = document.getElementById('moonModalOverlay');
+  if (modal) {
+    modal.classList.remove('hidden');
+    if (typeof playSukoonTone === 'function') {
+      playSukoonTone(isNight ? 659.25 : 783.99, 0.3);
+      setTimeout(() => playSukoonTone(isNight ? 783.99 : 880.00, 0.4), 180);
+    }
+  }
+}
+
+function toggleModalView(event) {
+  if (event) event.stopPropagation();
+  modalCurrentView = (modalCurrentView === 'moon') ? 'sun' : 'moon';
+  applyModalView(modalCurrentView);
+
+  if (typeof playSukoonTone === 'function') {
+    playSukoonTone(modalCurrentView === 'sun' ? 783.99 : 659.25, 0.25);
+  }
+}
+
+function applyModalView(mode) {
+  const data = CELESTIAL_DATA[mode];
+  const modalBadge = document.getElementById('modalBadge');
+  const modalIcon = document.getElementById('moonCardIcon');
+  const modalQuote = document.getElementById('moonModalQuoteText');
+  const modalSub = document.getElementById('modalSub');
+  const glow = document.querySelector('.moon-modal-glow');
+  const switchIcon = document.getElementById('modalSwitchIcon');
+  const switchLabel = document.getElementById('modalSwitchLabel');
+
+  if (modalBadge) modalBadge.textContent = data.badge;
+  if (modalIcon) modalIcon.textContent = data.icon;
+  if (modalQuote) modalQuote.textContent = data.quote;
+  if (modalSub) modalSub.textContent = data.sub;
+  if (glow) glow.style.background = 'radial-gradient(circle, ' + data.glow + ' 0%, rgba(255, 107, 139, 0.15) 50%, transparent 70%)';
+
+  // Toggle button shows option to switch into the other celestial
+  if (switchIcon && switchLabel) {
+    if (mode === 'moon') {
+      switchIcon.textContent = '☀️';
+      switchLabel.textContent = 'Sooraj Ka Paigaam Dekho';
+    } else {
+      switchIcon.textContent = '🌙';
+      switchLabel.textContent = 'Chand Ka Paigaam Dekho';
+    }
+  }
+}
+
+function closeCelestialModal(event) {
+  if (event) event.stopPropagation();
+  const modal = document.getElementById('moonModalOverlay');
+  if (modal) {
+    modal.classList.add('hidden');
+  }
+  // RESET STRICTLY TO REAL-TIME CLOCK ON CLOSE!
+  updateCelestialSky();
+}
+
+// Close on Escape key
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeCelestialModal();
+});
+
+updateCelestialSky();
+setInterval(updateCelestialSky, 60000); // Check every minute

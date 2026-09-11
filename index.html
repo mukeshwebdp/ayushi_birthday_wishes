@@ -15,22 +15,17 @@
 </head>
 <body>
 
-<!-- Compact Floating Sound Button -->
-<!-- <button class="music-toggle-btn playing" id="musicToggleBtn" onclick="toggleSukoonMusic(false, event)" title="Sound: ON / OFF" aria-label="Toggle Sound">
-  <span id="musicIcon">🎵</span>
-</button> -->
-
 <!-- Magical Birthday Surprise Intro Curtain -->
 <div class="gift-intro-overlay" id="giftIntro" onclick="openBirthdaySurprise()">
   <div class="gift-intro-card">
     <span class="gift-intro-icon">🎁</span>
-    <div class="gift-intro-tag">✨ Birthday Gift For ✨</div>
+    <div class="gift-intro-tag">✨ Birthday Wishes To ✨</div>
     <h2 class="gift-intro-title">
-      <span class="gift-intro-name">Ayushi Didi <span class="real-rose-flower" style="font-size:0.8em;">🌹</span></span>
+      <span class="gift-intro-name">Ayushi<span class="real-rose-flower" style="font-size:0.8em;">🌹</span></span>
     </h2>
     <p style="color: var(--text-muted); font-size: 0.88rem; margin-top: 4px;">A soothing musical surprise is waiting inside...</p>
     <button class="gift-intro-btn" onclick="openBirthdaySurprise(event)">
-      <span>🎁 Tap To Open Surprise!</span>
+      <span>🎁 Tap To Open!</span>
     </button>
   </div>
 </div>
@@ -50,17 +45,57 @@
   </div>
 </div>
 
+<!-- Sticky Real-Time Sky Celestial (Sun / Moon) -->
+<div class="sky-celestial moon-mode" id="skyCelestial" onclick="openCelestialModal(event)" title="Tap to see Didi's special message! ✨">
+  <div class="celestial-disc">
+    <span class="celestial-icon" id="celestialIcon">🌙</span>
+  </div>
+  <span class="celestial-pill" id="celestialGreeting">Taaron Bhari Raat 🌙</span>
+</div>
+
+<!-- Royal Celestial (Sun & Moon) Real-Time Quote Modal -->
+<div class="moon-modal-overlay hidden" id="moonModalOverlay" onclick="closeCelestialModal(event)">
+  <div class="moon-quote-card" onclick="event.stopPropagation()">
+    <button class="moon-modal-close" onclick="closeCelestialModal()" aria-label="Close">✕</button>
+    <div class="moon-modal-glow"></div>
+
+    <!-- Small Compact Switcher inside Card -->
+    <div class="modal-switch-wrap">
+      <button class="modal-switch-btn" id="modalSwitchBtn" onclick="toggleModalView(event)">
+        <span id="modalSwitchIcon">☀️</span>
+        <span id="modalSwitchLabel">Sooraj Ka Paigaam Dekho</span>
+      </button>
+    </div>
+
+    <div class="moon-card-badge" id="modalBadge">✨ RAAT KI CHAON · DIL SE ✨</div>
+    <div class="moon-card-icon-wrap">
+      <span class="moon-card-icon" id="moonCardIcon">🌙</span>
+    </div>
+    <h3 class="moon-card-title">Meri Pyaari Ayushi Didi</h3>
+    <div class="moon-quote-box">
+      <p class="moon-quote-text" id="moonModalQuoteText">
+        "Jaise chand sitaron ke beech chamakta hai, waise hi aap hamari zindagi ko roshan karti ho, Ayushi Didi!"
+      </p>
+    </div>
+    <p class="moon-card-sub" id="modalSub">Aapki smile aur presence hamari zindagi ki sabse badi khushi hai. Hamesha aise hi chamakti raho! 💖🌹</p>
+    <button class="moon-card-btn" onclick="closeCelestialModal()">
+      <span>💖 Shukriya 💖</span>
+    </button>
+  </div>
+</div>
+
 <div class="page-wrap">
 
   <!-- ════════ HERO ════════ -->
   <section class="hero">
+
     <div class="hero-glow"></div>
     <div class="hero-badge">✨ Royal Birthday Celebration ✨</div>
     <h2 class="hero-title">Happy Birthday</h2>
     <div class="hero-name-wrap">
       <span class="hero-crown">👑</span>
       <h1 class="hero-name">
-        <span class="hero-star">✦</span> Ayushi <span class="hero-star">✦</span>
+        <span class="hero-star">&#10022;</span> Ayushi <span class="hero-star">&#10022;</span>
       </h1>
     </div>
     <p class="hero-subtitle">Duniya ki sabse pyaari aur best Didi <span class="real-rose-flower" style="font-size:1.1em;">🌹</span></p>
@@ -83,7 +118,6 @@
   <!-- ════════ LETTER ════════ -->
   <section>
     <div class="sec-header reveal-item">
-      <!-- <span class="sec-pill">Dil Se 💌</span> -->
       <h2 class="sec-title">Aapke Liye Ek Khat</h2>
       <p class="sec-subtitle">Dil ki geheraiyoon se — with all the love 💖</p>
     </div>
@@ -95,7 +129,7 @@
         <div class="quote-icon">"</div>
         <div class="letter-content">
           <p>
-            Meri pyaari <strong>Ayushi Didi</strong>,
+            Meri pyaari <strong>Didi</strong>,
           </p>
           <p>
             Aaj aapke is super special din par, I want you to know how <strong>incredibly blessed</strong> I feel
@@ -114,10 +148,10 @@
             aur aapke saare dreams poore ho jayein. You truly deserve the absolute best! 🌟
           </p>
           <p>
-            <em>Happy Birthday, Ayushi Didi! Love you so very much, hamesha! 👑❤️</em>
+            <em>Happy Birthday, Ayushi! Love you so very much, hamesha! 👑❤️</em>
           </p>
         </div>
-        <div class="letter-signature">— Your loving sibling ❤️</div>
+        <div class="letter-signature">— Your loving brother ❤️</div>
       </div>
     </div>
   </section>
@@ -349,6 +383,30 @@
     </div>
   </section>
 
+  <!-- ════════ OPEN WHEN NOTES ════════ -->
+  <section class="open-when-section">
+    <div class="sec-header reveal-item">
+      <span class="sec-pill">Sirf Aapke Liye 💌</span>
+      <h2 class="sec-title">Open When You Need A Little Love</h2>
+      <p class="sec-subtitle">Chhote se notes, aapke har mood ke naam ✨</p>
+    </div>
+
+    <div class="open-when-grid">
+      <details class="open-when-card reveal-item">
+        <summary><span class="open-when-icon">🌧️</span><span>Open when you feel low</span><span class="open-when-plus">+</span></summary>
+        <p>Bas yaad rakhna Didi, aap kitni strong, loved aur special ho. Thoda sa rest lo, smile karo—sab phir se beautiful lagega. ❤️</p>
+      </details>
+      <details class="open-when-card reveal-item">
+        <summary><span class="open-when-icon">🏆</span><span>Open when you are proud</span><span class="open-when-plus">+</span></summary>
+        <p>Aapne jo bhi achieve kiya hai, uske liye hum sab ko aap par bahut proud feel hota hai. Keep shining, superstar! ✨</p>
+      </details>
+      <details class="open-when-card reveal-item">
+        <summary><span class="open-when-icon">🤗</span><span>Open when you need a smile</span><span class="open-when-plus">+</span></summary>
+        <p>Aapki smile is ghar ki favourite magic hai. Ek smile do na—poora din thoda aur khoobsurat ho jayega. 🌸</p>
+      </details>
+    </div>
+  </section>
+
   <!-- ════════ FINAL CELEBRATION ════════ -->
   <section class="final-celebration" onclick="triggerFireworks()">
     <div class="final-card-container reveal-item">
@@ -359,12 +417,13 @@
       <div class="final-name-wrap">
         <span class="final-crown">👑</span>
         <h1 class="final-ayushi">
-          <span class="hero-star">✦</span> <span class="gradient-text">Ayushi Didi!</span> <span class="hero-star">✦</span>
+          <span class="hero-star">&#10022;</span> <span class="gradient-text">Ayushi</span> <span class="hero-star">&#10022;</span>
         </h1>
       </div>
       <div class="final-note-box">
         <p class="final-note">💖 Ye saal aapki zindagi ka sabse happiest aur most successful saal ho! 🌟</p>
       </div>
+      <p class="final-signature">Hamesha aapka, Mukesh <span>❤️</span></p>
       <button class="cracker-btn" onclick="triggerFireworks(event)">
         <span class="btn-icon">🎆</span>
         <span>Tap Karke Fireworks Chalao!</span>
@@ -372,6 +431,110 @@
       </button>
       <div class="emoji-ribbon">
         <span>🎂</span><span>🎉</span><span>🎈</span><span>🥳</span><span>🎁</span><span>🌹</span><span>👑</span><span>✨</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════ COUNTDOWN TIMER (BELOW FINALE) ════════ -->
+  <section class="countdown-section">
+    <div class="sec-header reveal-item">
+      <span class="sec-pill">🎂 Special Countdown</span>
+      <h2 class="sec-title">Next Birthday Countdown</h2>
+      <p class="sec-subtitle">13 September — Har ek pal aapka intezaar hai! ✨</p>
+    </div>
+    <div class="countdown-grid reveal-item">
+      <div class="countdown-box">
+        <div class="countdown-num" id="cd-days">00</div>
+        <div class="countdown-label">Days</div>
+      </div>
+      <div class="countdown-sep">:</div>
+      <div class="countdown-box">
+        <div class="countdown-num" id="cd-hours">00</div>
+        <div class="countdown-label">Hours</div>
+      </div>
+      <div class="countdown-sep">:</div>
+      <div class="countdown-box">
+        <div class="countdown-num" id="cd-mins">00</div>
+        <div class="countdown-label">Minutes</div>
+      </div>
+      <div class="countdown-sep">:</div>
+      <div class="countdown-box">
+        <div class="countdown-num" id="cd-secs">00</div>
+        <div class="countdown-label">Seconds</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════ BALLOON POP GAME (BELOW COUNTDOWN) ════════ -->
+  <section class="game-section">
+    <div class="sec-header reveal-item">
+      <span class="sec-pill">🎈 Birthday Game</span>
+      <h2 class="sec-title">Balloon Pop Challenge!</h2>
+      <p class="sec-subtitle">30 seconds mein maximum balloons pop karke high score banao Didi! 🎉</p>
+    </div>
+    <div class="game-container reveal-item">
+      <div class="game-hud">
+        <div class="game-stat">
+          <span class="game-stat-icon">⭐</span>
+          <span>Score: <strong id="game-score">0</strong></span>
+        </div>
+        <div class="game-stat">
+          <span class="game-stat-icon">⏱️</span>
+          <span>Time: <strong id="game-timer">30</strong>s</span>
+        </div>
+        <div class="game-stat">
+          <span class="game-stat-icon">🎈</span>
+          <span>Popped: <strong id="game-popped">0</strong></span>
+        </div>
+      </div>
+      <div class="game-arena" id="gameArena">
+        <div class="game-start-overlay" id="gameStartOverlay">
+          <span class="game-start-icon">🎈</span>
+          <h3>Balloon Pop!</h3>
+          <p>30 seconds mein jitne ho sake pop karo!</p>
+          <button class="game-start-btn" id="gameStartBtn" onclick="startBalloonGame()">🎮 Game Start Karo!</button>
+        </div>
+        <div class="game-end-overlay hidden" id="gameEndOverlay">
+          <span class="game-end-icon">🏆</span>
+          <h3 id="gameEndTitle">Kamaal Kar Diya Didi! 👑</h3>
+          <p id="gameEndMsg">Aapne <strong id="finalScore">0</strong> points score kiye!</p>
+          
+          <!-- Special Birthday Reward Card -->
+          <div class="reward-card" id="rewardCard">
+            <div class="reward-ribbon">🎁 SPECIAL BIRTHDAY REWARD UNLOCKED 🎁</div>
+            <div class="reward-badge">👑 Best Sister of the Universe 👑</div>
+            <h4 class="reward-title">Golden Sister VIP Pass ✨</h4>
+            <p class="reward-text">
+              Yeh pass Ayushi Didi ko Mukesh ki taraf se <strong>Unlimited Treats, Favorite Foods, Silly Jokes aur Lifetime Support</strong> ka permanent right deta hai! 💖
+            </p>
+            <div class="reward-stamp">VERIFIED WITH LOVE ❤️</div>
+          </div>
+
+          
+          <div class="game-end-actions">
+            <button class="game-start-btn" onclick="celebrateReward()">🎉 Claim Reward &amp; Blast! 🎆</button>
+            <!-- <button class="game-retry-btn" onclick="resetBalloonGame()">🔄 Phir Khelo</button> -->
+          </div>
+        </div>
+
+        <!-- Prompt After Claiming Reward -->
+        <div class="claim-prompt-overlay hidden" id="claimPromptOverlay">
+          <div class="claim-prompt-box">
+            <span class="claim-prompt-icon">🎉🎁</span>
+            <h3 class="claim-prompt-title">Reward Claimed! 💖</h3>
+            <p class="claim-prompt-msg">
+              Aapka birthday reward successfully claim ho gaya!<br/>
+              Kya aap agla <strong>Secret Birthday Reward</strong> unlock karne ke liye phir se khelna chahti hain?
+            </p>
+            <div class="claim-prompt-btns">
+              <button class="claim-btn-yes" onclick="acceptPlayAgain()">🎮 Haan, Phir Se Khelo!</button>
+              <button class="claim-btn-no" onclick="closeClaimPrompt()">✨ Baaki Wishes Dekho</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="game-levels">
+        <span class="level-badge" id="level-badge">🌸 Beginner</span>
       </div>
     </div>
   </section>
