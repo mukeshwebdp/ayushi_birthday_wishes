@@ -1,6 +1,6 @@
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+/* ===============================================================
    HAPPY BIRTHDAY AYUSHI - LUXURY STYLESHEET
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+=============================================================== */
 
 /* 1. Global Reset & Theme Variables */
 *, *::before, *::after {
@@ -1396,254 +1396,9 @@ footer span { color: var(--rose); }
   }
 }
 
-/* ═══════════════════════════════════════════════
-   TRANSPARENT COUNTDOWN & GAME STYLES (BELOW FINALE)
-═══════════════════════════════════════════════ */
-.countdown-section {
-  padding: 40px 0 30px;
-  text-align: center;
-  position: relative;
-  z-index: 10;
-}
-.countdown-grid {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: clamp(8px, 3vw, 20px);
-  padding: 20px 10px;
-  flex-wrap: nowrap;
-}
-.countdown-box {
-  background: linear-gradient(145deg, rgba(24, 12, 44, 0.35), rgba(12, 5, 24, 0.40)) padding-box,
-              linear-gradient(135deg, rgba(246,211,101,0.85), rgba(255,107,139,0.85)) border-box;
-  border: 2px solid transparent;
-  border-radius: clamp(14px, 3vw, 22px);
-  padding: clamp(14px, 3vw, 24px) clamp(14px, 3.5vw, 28px);
-  text-align: center;
-  min-width: clamp(66px, 18vw, 110px);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  box-shadow: 0 12px 35px rgba(0,0,0,0.4), 0 0 25px rgba(246,211,101,0.15);
-  animation: borderMovementFlow 6s ease infinite;
-}
-.countdown-num {
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(2.2rem, 7vw, 4rem);
-  font-weight: 700;
-  background: linear-gradient(135deg, #fff 10%, #ffd166 50%, #ff6b8b 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  line-height: 1;
-  transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
-  display: block;
-}
-.countdown-num.tick {
-  transform: scale(1.18);
-}
-.countdown-label {
-  font-size: clamp(0.65rem, 2.2vw, 0.8rem);
-  font-weight: 700;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--gold);
-  margin-top: 6px;
-}
-.countdown-sep {
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(1.8rem, 5vw, 3rem);
-  font-weight: 700;
-  color: var(--gold);
-  opacity: 0.7;
-  animation: sepBlink 1s step-end infinite;
-  align-self: flex-start;
-  padding-top: clamp(10px, 2vw, 18px);
-}
-@keyframes sepBlink {
-  0%, 100% { opacity: 0.7; }
-  50% { opacity: 0.2; }
-}
-
-/* ═══════════════════════════════════════════════
-   BALLOON POP GAME (TRANSPARENT GLASS ARENA)
-═══════════════════════════════════════════════ */
-.game-section {
-  padding: 30px 0 60px;
-  position: relative;
-  z-index: 10;
-}
-.game-container {
-  max-width: 720px;
-  margin: 0 auto;
-  background: linear-gradient(145deg, rgba(22, 10, 40, 0.35), rgba(10, 5, 22, 0.40)) padding-box,
-              linear-gradient(135deg, rgba(246,211,101,0.85), rgba(255,107,139,0.9), rgba(132,94,194,0.8), rgba(246,211,101,0.85)) border-box;
-  border: 2px solid transparent;
-  border-radius: clamp(18px, 4vw, 28px);
-  padding: clamp(18px, 4vw, 28px);
-  box-shadow: 0 20px 60px rgba(0,0,0,0.45), 0 0 30px rgba(255,107,139,0.2);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  animation: borderMovementFlow 7s ease infinite;
-}
-.game-hud {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(246,211,101,0.3);
-  border-radius: 50px;
-  padding: 10px 16px;
-  margin-bottom: 16px;
-  backdrop-filter: blur(6px);
-}
-.game-stat {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: clamp(0.82rem, 2.5vw, 0.98rem);
-  font-weight: 600;
-  color: var(--text-main);
-}
-.game-stat strong {
-  color: var(--gold);
-  font-size: 1.1em;
-}
-.game-arena {
-  position: relative;
-  width: 100%;
-  height: clamp(320px, 58vw, 440px);
-  background: rgba(12, 6, 26, 0.28);
-  border-radius: 20px;
-  overflow: hidden;
-  border: 1.5px solid rgba(246,211,101,0.35);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-}
-.game-start-overlay,
-.game-end-overlay {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  background: rgba(9,5,24,0.75);
-  backdrop-filter: blur(8px);
-  z-index: 10;
-  text-align: center;
-  padding: 20px;
-}
-.game-start-overlay.hidden,
-.game-end-overlay.hidden {
-  display: none;
-}
-.game-start-icon,
-.game-end-icon {
-  font-size: clamp(3.2rem, 10vw, 4.5rem);
-  animation: floatBounce 2.5s ease-in-out infinite;
-}
-.game-start-overlay h3,
-.game-end-overlay h3 {
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(1.4rem, 5vw, 2.2rem);
-  color: var(--gold-light);
-}
-.game-start-overlay p,
-.game-end-overlay p {
-  font-size: clamp(0.85rem, 2.8vw, 1rem);
-  color: var(--text-muted);
-  max-width: 300px;
-}
-.game-start-btn {
-  margin-top: 8px;
-  padding: 13px 32px;
-  background: linear-gradient(135deg, var(--gold), var(--rose));
-  border: none;
-  border-radius: 50px;
-  color: #090514;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: clamp(0.92rem, 3vw, 1.08rem);
-  font-weight: 800;
-  cursor: pointer;
-  box-shadow: 0 8px 25px rgba(255,107,139,0.5);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  letter-spacing: 0.03em;
-}
-.game-start-btn:hover { transform: translateY(-2px) scale(1.04); }
-.game-start-btn:active { transform: scale(0.96); }
-
-/* Game Balloons */
-.game-balloon {
-  position: absolute;
-  cursor: pointer;
-  border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.3rem;
-  animation: balloonRise linear forwards;
-  transform-origin: center bottom;
-  box-shadow: inset -5px -5px 10px rgba(0,0,0,0.3), 0 4px 15px rgba(0,0,0,0.4);
-  transition: transform 0.1s ease;
-  user-select: none;
-  -webkit-user-select: none;
-  will-change: transform;
-}
-.game-balloon::after {
-  content: '';
-  position: absolute;
-  bottom: -12px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 1.5px;
-  height: 14px;
-  background: rgba(255,255,255,0.35);
-}
-.game-balloon:active {
-  transform: scale(0.9);
-}
-@keyframes balloonRise {
-  0% { opacity: 0; transform: translateY(0) rotate(0deg); }
-  6% { opacity: 1; }
-  85% { opacity: 0.95; }
-  100% { opacity: 0; transform: translateY(-560px) rotate(14deg); }
-}
-  8% { opacity: 1; }
-  100% { opacity: 0.85; transform: translateY(-115%) rotate(8deg); }
-}
-.balloon-pop {
-  position: absolute;
-  pointer-events: none;
-  font-size: 2rem;
-  animation: popBurst 0.55s ease forwards;
-  z-index: 20;
-}
-@keyframes popBurst {
-  0% { transform: scale(0.5); opacity: 1; }
-  50% { transform: scale(1.6); opacity: 1; }
-  100% { transform: scale(2.2); opacity: 0; }
-}
-.game-levels {
-  text-align: center;
-  margin-top: 14px;
-}
-.level-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 18px;
-  background: rgba(246,211,101,0.14);
-  border: 1px solid rgba(246,211,101,0.45);
-  border-radius: 50px;
-  color: var(--gold);
-  font-size: 0.85rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-}
-
-/* ═══════════════════════════════════════════════
-   UNIFIED CARD BACKGROUND (MATCHING OPEN WHEN CARDS)
-═══════════════════════════════════════════════ */
+/* ===============================================================
+   11. UNIFIED CARD BACKGROUND (MATCHING OPEN-WHEN CARDS)
+=============================================================== */
 .letter-box,
 .wish-card,
 .reason-item,
@@ -1673,14 +1428,16 @@ footer span { color: var(--rose); }
   border: 1px solid rgba(246, 211, 101, 0.35) !important;
 }
 
-.game-arena {
-  background: rgba(18, 8, 30, 0.65) !important;
-  border: 1px solid rgba(255, 107, 139, 0.4) !important;
+/* ===============================================================
+   12. COUNTDOWN TIMER (RESPONSIVE & NO OVERFLOW)
+=============================================================== */
+.countdown-section {
+  padding: 40px 0 30px;
+  text-align: center;
+  position: relative;
+  z-index: 10;
 }
 
-/* ═══════════════════════════════════════════════
-   FIX COUNTDOWN OVERFLOW (PERFECT FIT ON ALL SCREENS)
-═══════════════════════════════════════════════ */
 .countdown-grid {
   display: flex !important;
   align-items: center !important;
@@ -1699,14 +1456,23 @@ footer span { color: var(--rose); }
   border-radius: clamp(12px, 2.5vw, 18px) !important;
   text-align: center !important;
   box-sizing: border-box !important;
+  animation: borderMovementFlow 6s ease infinite !important;
 }
 
 .countdown-num {
   font-family: 'Playfair Display', serif !important;
   font-size: clamp(1.5rem, 5.2vw, 2.6rem) !important;
   font-weight: 700 !important;
+  background: linear-gradient(135deg, #fff 10%, #ffd166 50%, #ff6b8b 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
   line-height: 1.1 !important;
   display: block !important;
+  transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.countdown-num.tick {
+  transform: scale(1.18);
 }
 
 .countdown-label {
@@ -1730,19 +1496,223 @@ footer span { color: var(--rose); }
   padding-top: clamp(4px, 1.2vw, 12px) !important;
   align-self: flex-start !important;
   flex-shrink: 0 !important;
+  animation: sepBlink 1s step-end infinite !important;
 }
 
-/* ═══════════════════════════════════════════════
-   CRYSTAL-CLEAR LUXURY REWARD CARD (HIGH READABILITY)
-═══════════════════════════════════════════════ */
+@keyframes sepBlink {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 0.2; }
+}
+
+/* ===============================================================
+   13. BALLOON POP GAME ENGINE & ARENA
+=============================================================== */
+.game-section {
+  padding: 30px 0 60px;
+  position: relative;
+  z-index: 10;
+}
+
+.game-container {
+  max-width: 720px;
+  margin: 0 auto;
+  border-radius: clamp(18px, 4vw, 28px);
+  padding: clamp(18px, 4vw, 28px);
+  box-sizing: border-box;
+  animation: borderMovementFlow 7s ease infinite;
+}
+
+.game-hud {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(246, 211, 101, 0.3);
+  border-radius: 50px;
+  padding: 10px 16px;
+  margin-bottom: 16px;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.game-stat {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: clamp(0.82rem, 2.5vw, 0.98rem);
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.game-stat strong {
+  color: var(--gold);
+  font-size: 1.1em;
+}
+
+.game-arena {
+  position: relative;
+  width: 100%;
+  min-height: clamp(390px, 64vw, 500px);
+  height: auto;
+  background: rgba(18, 8, 30, 0.65) !important;
+  border: 1px solid rgba(255, 107, 139, 0.4) !important;
+  border-radius: 20px;
+  overflow: hidden;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.game-start-overlay,
+.game-end-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(9, 5, 24, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 10;
+  text-align: center;
+}
+
+.game-start-overlay {
+  justify-content: center;
+  gap: 12px;
+  padding: 20px;
+}
+
+.game-end-overlay {
+  justify-content: flex-start;
+  padding: 10px 10px 18px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.game-start-overlay.hidden,
+.game-end-overlay.hidden {
+  display: none !important;
+}
+
+.game-start-icon,
+.game-end-icon {
+  font-size: clamp(2.8rem, 8vw, 4rem);
+  animation: floatBounce 2.5s ease-in-out infinite;
+}
+
+.game-start-overlay h3,
+.game-end-overlay h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.4rem, 5vw, 2.2rem);
+  color: var(--gold-light);
+}
+
+.game-start-overlay p,
+.game-end-overlay p {
+  font-size: clamp(0.85rem, 2.8vw, 1rem);
+  color: var(--text-muted);
+  max-width: 320px;
+}
+
+.game-start-btn {
+  margin-top: 8px;
+  padding: 13px 32px;
+  background: linear-gradient(135deg, var(--gold), var(--rose));
+  border: none;
+  border-radius: 50px;
+  color: #090514;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: clamp(0.92rem, 3vw, 1.08rem);
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 8px 25px rgba(255, 107, 139, 0.5);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  letter-spacing: 0.03em;
+}
+
+.game-start-btn:hover {
+  transform: translateY(-2px) scale(1.04);
+}
+
+.game-balloon {
+  position: absolute;
+  cursor: pointer;
+  border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  animation: balloonRise linear forwards;
+  transform-origin: center bottom;
+  box-shadow: inset -5px -5px 10px rgba(0, 0, 0, 0.3), 0 4px 15px rgba(0, 0, 0, 0.4);
+  transition: transform 0.1s ease;
+  user-select: none;
+  -webkit-user-select: none;
+  will-change: transform;
+}
+
+.game-balloon::after {
+  content: '';
+  position: absolute;
+  bottom: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1.5px;
+  height: 14px;
+  background: rgba(255, 255, 255, 0.35);
+}
+
+@keyframes balloonRise {
+  0% { opacity: 0; transform: translateY(0) rotate(0deg); }
+  6% { opacity: 1; }
+  85% { opacity: 0.95; }
+  100% { opacity: 0; transform: translateY(-560px) rotate(14deg); }
+}
+
+.balloon-pop {
+  position: absolute;
+  pointer-events: none;
+  font-size: 2rem;
+  animation: popBurst 0.55s ease forwards;
+  z-index: 20;
+}
+
+@keyframes popBurst {
+  0% { transform: scale(0.5); opacity: 1; }
+  50% { transform: scale(1.6); opacity: 1; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
+.game-levels {
+  text-align: center;
+  margin-top: 14px;
+}
+
+.level-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 18px;
+  background: rgba(246, 211, 101, 0.14);
+  border: 1px solid rgba(246, 211, 101, 0.45);
+  border-radius: 50px;
+  color: var(--gold);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+/* ===============================================================
+   14. CRYSTAL-CLEAR READABLE REWARD CARD
+=============================================================== */
 .reward-card {
-  margin: 12px auto 10px !important;
-  max-width: 440px !important;
+  margin: 6px auto !important;
+  max-width: 390px !important;
   width: 95% !important;
   background: linear-gradient(145deg, rgba(32, 14, 54, 0.98), rgba(12, 5, 24, 0.98)) !important;
   border: 1.5px solid rgba(246, 211, 101, 0.75) !important;
   border-radius: 20px !important;
-  padding: 18px 22px !important;
+  padding: 10px 14px !important;
   box-shadow: 0 16px 45px rgba(0, 0, 0, 0.8), 0 0 30px rgba(246, 211, 101, 0.25) !important;
   animation: pulseReward 2.8s infinite ease-in-out !important;
   text-align: center !important;
@@ -1750,46 +1720,46 @@ footer span { color: var(--rose); }
 }
 
 @keyframes pulseReward {
-  0%, 100% { transform: scale(1); box-shadow: 0 16px 45px rgba(0,0,0,0.8), 0 0 20px rgba(246,211,101,0.25); }
-  50% { transform: scale(1.02); box-shadow: 0 20px 55px rgba(0,0,0,0.9), 0 0 35px rgba(255,107,139,0.4); }
+  0%, 100% { transform: scale(1); box-shadow: 0 16px 45px rgba(0, 0, 0, 0.8), 0 0 20px rgba(246, 211, 101, 0.25); }
+  50% { transform: scale(1.02); box-shadow: 0 20px 55px rgba(0, 0, 0, 0.9), 0 0 35px rgba(255, 107, 139, 0.4); }
 }
 
 .reward-ribbon {
   display: inline-block !important;
-  font-size: 0.76rem !important;
+  font-size: 0.74rem !important;
   font-weight: 800 !important;
   letter-spacing: 0.12em !important;
   color: #f6d365 !important;
   text-transform: uppercase !important;
-  margin-bottom: 8px !important;
+  margin-bottom: 5px !important;
   background: rgba(246, 211, 101, 0.14) !important;
-  padding: 4px 14px !important;
+  padding: 3px 12px !important;
   border-radius: 50px !important;
   border: 1px solid rgba(246, 211, 101, 0.4) !important;
 }
 
 .reward-badge {
-  font-size: 0.95rem !important;
+  font-size: 0.92rem !important;
   color: #ffffff !important;
   font-weight: 700 !important;
-  margin: 4px 0 6px !important;
-  text-shadow: 0 2px 8px rgba(0,0,0,0.6) !important;
+  margin: 3px 0 4px !important;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6) !important;
 }
 
 .reward-title {
   font-family: 'Playfair Display', serif !important;
-  font-size: clamp(1.2rem, 4vw, 1.48rem) !important;
+  font-size: clamp(1.1rem, 3.8vw, 1.35rem) !important;
   font-weight: 700 !important;
   color: #ffd166 !important;
-  margin-bottom: 8px !important;
+  margin-bottom: 4px !important;
   text-shadow: 0 2px 12px rgba(246, 211, 101, 0.3) !important;
 }
 
 .reward-text {
-  font-size: 0.92rem !important;
+  font-size: 0.84rem !important;
   color: #f8fafc !important;
-  line-height: 1.6 !important;
-  margin-bottom: 12px !important;
+  line-height: 1.45 !important;
+  margin-bottom: 8px !important;
   font-weight: 400 !important;
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8) !important;
 }
@@ -1801,53 +1771,42 @@ footer span { color: var(--rose); }
 
 .reward-stamp {
   display: inline-block !important;
-  font-size: 0.75rem !important;
+  font-size: 0.7rem !important;
   font-weight: 800 !important;
   letter-spacing: 0.12em !important;
   color: #090514 !important;
   background: linear-gradient(135deg, #f6d365, #ff6b8b) !important;
-  padding: 5px 16px !important;
+  padding: 4px 12px !important;
   border-radius: 50px !important;
   box-shadow: 0 4px 15px rgba(255, 107, 139, 0.4) !important;
 }
 
-/* ═══════════════════════════════════════════════
-   ARENA FIT & POST-CLAIM PLAY AGAIN PROMPT
-═══════════════════════════════════════════════ */
-.game-arena {
-  min-height: clamp(390px, 64vw, 500px) !important;
-  height: auto !important;
+.game-end-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 10px;
 }
 
-.game-end-overlay {
-  overflow-y: auto !important;
-  justify-content: flex-start !important;
-  padding: 10px 10px 16px !important;
-  -webkit-overflow-scrolling: touch !important;
+.game-retry-btn {
+  padding: 11px 22px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 50px;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
 }
 
-.reward-card {
-  margin: 6px auto !important;
-  max-width: 390px !important;
-  padding: 10px 14px !important;
+.game-retry-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
 }
 
-.reward-title {
-  font-size: clamp(1.1rem, 3.8vw, 1.35rem) !important;
-  margin-bottom: 4px !important;
-}
-
-.reward-text {
-  font-size: 0.84rem !important;
-  line-height: 1.45 !important;
-  margin-bottom: 8px !important;
-}
-
-.reward-stamp {
-  font-size: 0.7rem !important;
-  padding: 4px 12px !important;
-}
-
+/* Claim Prompt Overlay */
 .claim-prompt-overlay {
   position: absolute;
   inset: 0;
@@ -1949,9 +1908,9 @@ footer span { color: var(--rose); }
   color: #fff;
 }
 
-/* ═══════════════════════════════════════════════
-   ORIGINAL GLOWING CELESTIAL DISC (SUN & MOON)
-═══════════════════════════════════════════════ */
+/* ===============================================================
+   15. STICKY REAL-TIME SKY CELESTIAL (SUN & MOON)
+=============================================================== */
 .sky-celestial {
   position: fixed !important;
   top: clamp(14px, 2.5vw, 22px) !important;
@@ -2022,9 +1981,9 @@ footer span { color: var(--rose); }
   white-space: nowrap !important;
 }
 
-/* ═══════════════════════════════════════════════
-   ROYAL CELESTIAL MOON QUOTE MODAL
-═══════════════════════════════════════════════ */
+/* ===============================================================
+   16. CELESTIAL (SUN & MOON) QUOTE MODAL
+=============================================================== */
 .moon-modal-overlay {
   position: fixed !important;
   inset: 0 !important;
@@ -2104,6 +2063,35 @@ footer span { color: var(--rose); }
   transform: scale(1.1) !important;
 }
 
+.modal-switch-wrap {
+  display: flex !important;
+  justify-content: center !important;
+  margin-bottom: 12px !important;
+}
+
+.modal-switch-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  padding: 5px 14px !important;
+  border-radius: 50px !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(246, 211, 101, 0.45) !important;
+  color: var(--gold-light) !important;
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  font-size: 0.76rem !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  transition: all 0.25s ease !important;
+  letter-spacing: 0.02em !important;
+}
+
+.modal-switch-btn:hover {
+  background: rgba(246, 211, 101, 0.18) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 15px rgba(246, 211, 101, 0.25) !important;
+}
+
 .moon-card-badge {
   display: inline-block !important;
   font-size: 0.74rem !important;
@@ -2143,6 +2131,7 @@ footer span { color: var(--rose); }
   padding: 16px 18px !important;
   margin-bottom: 14px !important;
   backdrop-filter: blur(6px) !important;
+  -webkit-backdrop-filter: blur(6px) !important;
 }
 
 .moon-quote-text {
@@ -2178,67 +2167,4 @@ footer span { color: var(--rose); }
 
 .moon-card-btn:hover {
   transform: translateY(-2px) scale(1.04) !important;
-}
-
-/* Celestial Tabs (Chand / Sooraj) */
-.celestial-tabs {
-  display: flex !important;
-  justify-content: center !important;
-  gap: 8px !important;
-  margin-bottom: 12px !important;
-}
-
-.c-tab {
-  padding: 6px 14px !important;
-  border-radius: 50px !important;
-  background: rgba(255, 255, 255, 0.08) !important;
-  border: 1px solid rgba(246, 211, 101, 0.35) !important;
-  color: rgba(248, 250, 252, 0.75) !important;
-  font-family: 'Plus Jakarta Sans', sans-serif !important;
-  font-size: 0.78rem !important;
-  font-weight: 700 !important;
-  cursor: pointer !important;
-  transition: all 0.25s ease !important;
-}
-
-.c-tab:hover {
-  background: rgba(255, 255, 255, 0.16) !important;
-  color: #fff !important;
-}
-
-.c-tab.active {
-  background: linear-gradient(135deg, var(--gold), var(--rose)) !important;
-  color: #090514 !important;
-  border-color: transparent !important;
-  box-shadow: 0 4px 14px rgba(255, 107, 139, 0.4) !important;
-}
-
-/* Compact Switch Tab Inside Modal */
-.modal-switch-wrap {
-  display: flex !important;
-  justify-content: center !important;
-  margin-bottom: 12px !important;
-}
-
-.modal-switch-btn {
-  display: inline-flex !important;
-  align-items: center !important;
-  gap: 6px !important;
-  padding: 5px 14px !important;
-  border-radius: 50px !important;
-  background: rgba(255, 255, 255, 0.08) !important;
-  border: 1px solid rgba(246, 211, 101, 0.45) !important;
-  color: var(--gold-light) !important;
-  font-family: 'Plus Jakarta Sans', sans-serif !important;
-  font-size: 0.76rem !important;
-  font-weight: 700 !important;
-  cursor: pointer !important;
-  transition: all 0.25s ease !important;
-  letter-spacing: 0.02em !important;
-}
-
-.modal-switch-btn:hover {
-  background: rgba(246, 211, 101, 0.18) !important;
-  transform: translateY(-1px) !important;
-  box-shadow: 0 4px 15px rgba(246, 211, 101, 0.25) !important;
 }
